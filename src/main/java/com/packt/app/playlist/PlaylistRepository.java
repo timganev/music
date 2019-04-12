@@ -1,10 +1,11 @@
-package com.packt.app.artist;
+package com.packt.app.playlist;
+
 
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface ArtistRepository extends CrudRepository<Artist, Integer> {
+public interface PlaylistRepository extends CrudRepository<Playlist, Integer> {
 
 }

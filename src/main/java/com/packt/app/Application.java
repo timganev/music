@@ -6,17 +6,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.packt.app.user.CarRepository;
-import com.packt.app.user.OwnerRepository;
+//import com.packt.app.user.CarRepository;
+//import com.packt.app.user.OwnerRepository;
 import com.packt.app.user.UserRepository;
 
 @SpringBootApplication
 public class Application {
-	@Autowired	
-	private CarRepository repository;
-
-	@Autowired	
-	private OwnerRepository orepository;
+//	@Autowired
+//	private CarRepository repository;
+//
+//	@Autowired
+//	private OwnerRepository orepository;
 
 	@Autowired	
 	private UserRepository urepository;	

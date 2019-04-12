@@ -12,7 +12,7 @@ public class Playlist {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     private String title;
     private int user_id;
@@ -39,11 +39,11 @@ public class Playlist {
     }
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
