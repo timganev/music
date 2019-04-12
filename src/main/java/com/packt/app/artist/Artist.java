@@ -22,7 +22,7 @@ public class Artist {
     @JsonIgnore
     private Set<Album> artistAlbums;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="artist_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="artist")
     @JsonIgnore
     private Set<Track> artistTracks;
 

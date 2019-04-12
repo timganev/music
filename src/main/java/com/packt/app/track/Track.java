@@ -20,29 +20,30 @@ public class Track {
     private String preview_url;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity= Genre.class)
-    @JoinColumn(name = "genre_id")
-    private int genre_id;
+    @JoinColumn(name = "genre")
+    private Genre genre;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity= Album.class)
-    @JoinColumn(name = "album_id")
-    private int album_id;
+    @JoinColumn(name = "album")
+    private Album album;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity= Artist.class)
-    @JoinColumn(name = "artist_id")
-    private int artist_id;
+    @JoinColumn(name = "artist")
+    private Artist artist;
 
     public Track() {
 
     }
 
-    public Track(String title, String link, int duration, int rank, String preview_url, int album_id, int genre_id) {
+    public Track(String title, String link, int duration, int rank, String preview_url, Genre genre, Album album, Artist artist) {
         this.title = title;
         this.link = link;
         this.duration = duration;
         this.rank = rank;
         this.preview_url = preview_url;
-        this.album_id = album_id;
-        this.genre_id = genre_id;
+        this.genre = genre;
+        this.album = album;
+        this.artist = artist;
     }
 
     public Integer getId() {
@@ -93,19 +94,27 @@ public class Track {
         this.preview_url = preview_url;
     }
 
-    public int getAlbum_id() {
-        return album_id;
+    public Genre getGenre() {
+        return genre;
     }
 
-    public void setAlbum_id(int album_id) {
-        this.album_id = album_id;
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
-    public int getGenre_id() {
-        return genre_id;
+    public Album getAlbum() {
+        return album;
     }
 
-    public void setGenre_id(int genre_id) {
-        this.genre_id = genre_id;
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
+
+    public Artist getArtist() {
+        return artist;
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 }

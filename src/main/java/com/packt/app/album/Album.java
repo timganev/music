@@ -19,11 +19,11 @@ public class Album {
     private String title;
     private String album_track;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="album_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="album")
     @JsonIgnore
     private Set<Track> albumTracks;
 
@@ -63,5 +63,19 @@ public class Album {
         this.album_track = album_track;
     }
 
+    public Artist getArtist() {
+        return artist;
+    }
 
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+    }
+
+    public Set<Track> getAlbumTracks() {
+        return albumTracks;
+    }
+
+    public void setAlbumTracks(Set<Track> albumTracks) {
+        this.albumTracks = albumTracks;
+    }
 }

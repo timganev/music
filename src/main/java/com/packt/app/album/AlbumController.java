@@ -7,11 +7,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AlbumController {
-	@Autowired
-	private AlbumRepository repository;
 
-	@RequestMapping("/album")
-	public Iterable<Album> getCars() {
-		return repository.findAll();
+
+	private AlbumService albumService;
+
+	@Autowired
+	public AlbumController(AlbumService albumService) {
+		this.albumService = albumService;
+	}
+
+	@RequestMapping("/albums")
+	public Iterable<Album> getAlbums() {
+		return albumService.getAlbums();
 	}
 }

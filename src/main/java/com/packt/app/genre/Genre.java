@@ -19,7 +19,7 @@ public class Genre {
     private String image_url;
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="genre_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="genre")
     @JsonIgnore
     private Set<Track> tracks;
 
