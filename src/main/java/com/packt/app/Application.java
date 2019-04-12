@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 //import com.packt.app.user.CarRepository;
 //import com.packt.app.user.OwnerRepository;
-import com.packt.app.user.UserRepository;
+
 
 @SpringBootApplication
 public class Application {
@@ -18,8 +18,8 @@ public class Application {
 //	@Autowired
 //	private OwnerRepository orepository;
 
-	@Autowired	
-	private UserRepository urepository;	
+//	@Autowired
+//	private UserRepository urepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
