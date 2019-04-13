@@ -16,7 +16,7 @@ public class Genre {
     private Integer id;
 
     private String name;
-    private String image_url;
+
 
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="genre")
@@ -29,7 +29,7 @@ public class Genre {
 
     public Genre(String name, String image_url) {
         this.name = name;
-        this.image_url = image_url;
+
     }
 
 
@@ -49,13 +49,6 @@ public class Genre {
         this.name = name;
     }
 
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
-    }
 
     public Set<Track> getTracks() {
         return tracks;

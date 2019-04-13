@@ -16,8 +16,9 @@ public class Playlist {
 
     private String title;
     private int user_id;
+    private String image_url;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "playlists_genres",
             joinColumns = @JoinColumn(name = "genre_id"),
             inverseJoinColumns = @JoinColumn(name = "playlist_id"))
@@ -33,11 +34,11 @@ public class Playlist {
 
     }
 
-    public Playlist(String title, int user_id) {
+    public Playlist(String title, int user_id, String image_url) {
         this.title = title;
         this.user_id = user_id;
+        this.image_url = image_url;
     }
-
 
     public Integer getId() {
         return id;
@@ -77,5 +78,13 @@ public class Playlist {
 
     public void setPlaylistTracks(Set<Track> playlistTracks) {
         this.playlistTracks = playlistTracks;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 }
