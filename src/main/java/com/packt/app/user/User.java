@@ -1,6 +1,8 @@
 package com.packt.app.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.packt.app.security.Role;
+import com.packt.app.userDetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -16,6 +18,11 @@ public class User {
     @Column
     @JsonIgnore
     private String password;
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="user_id")
+    @JsonIgnore
+    private Set<UserDetails> userDetails;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLES", joinColumns = {

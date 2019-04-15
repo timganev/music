@@ -2,6 +2,8 @@ package com.packt.app.genre;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.packt.app.track.Track;
 
 
@@ -9,12 +11,13 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Genre {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    @JsonProperty("name")
     private String name;
 
 

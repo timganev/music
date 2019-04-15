@@ -1,6 +1,7 @@
-package com.packt.app.user;
+package com.packt.app.security;
 
 import com.packt.app.config.TokenProvider;
+import com.packt.app.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

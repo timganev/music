@@ -16,4 +16,8 @@ public class TrackServiceImpl implements TrackService{
     public Iterable<Track> getTracks(){
         return trackRepository.findAll();
     }
+
+    public void saveTrack(Track track){
+        trackRepository.save(track);
+    }
 }

@@ -15,7 +15,12 @@ public class GenreController {
     }
 
     @GetMapping("/genres")
-    public Iterable<Genre> getGenres(){
+    public Iterable<Genre> getGenres() {
         return genreService.getGenres();
+    }
+
+    @GetMapping("/savegenre")
+    public void saveGenres() {
+       genreService.saveGenres();
     }
 }

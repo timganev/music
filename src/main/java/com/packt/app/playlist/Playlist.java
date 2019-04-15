@@ -3,6 +3,7 @@ package com.packt.app.playlist;
 
 import com.packt.app.genre.Genre;
 import com.packt.app.track.Track;
+import com.packt.app.userDetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -15,7 +16,11 @@ public class Playlist {
     private Integer id;
 
     private String title;
-    private int user_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "details_id")
+    private UserDetails details_id;
+
     private String image_url;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -34,9 +39,9 @@ public class Playlist {
 
     }
 
-    public Playlist(String title, int user_id, String image_url) {
+    public Playlist(String title, UserDetails details_id, String image_url) {
         this.title = title;
-        this.user_id = user_id;
+        this.details_id = details_id;
         this.image_url = image_url;
     }
 
@@ -56,12 +61,13 @@ public class Playlist {
         this.title = title;
     }
 
-    public int getUser_id() {
-        return user_id;
+
+    public UserDetails getDetails_id() {
+        return details_id;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setDetails_id(UserDetails details_id) {
+        this.details_id = details_id;
     }
 
     public Set<Genre> getPlaylistGenres() {

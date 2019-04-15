@@ -1,4 +1,4 @@
-package com.packt.app.user;
+package com.packt.app.security;
 
 public class AuthToken {
 
