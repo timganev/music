@@ -16,4 +16,7 @@ public class AlbumServiceImpl implements AlbumService{
     public Iterable<Album> getAlbums(){
         return albumRepository.findAll();
     }
+    public void saveAlbums(Album album){
+        albumRepository.save(album);
+    }
 }

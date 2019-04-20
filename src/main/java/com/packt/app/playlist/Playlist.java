@@ -1,6 +1,8 @@
 package com.packt.app.playlist;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.packt.app.genre.Genre;
 import com.packt.app.track.Track;
 import com.packt.app.userDetails.UserDetails;
@@ -9,14 +11,17 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Playlist {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
+    @JsonProperty("title")
     private String title;
 
+    @JsonProperty("creator")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "details_id")
     private UserDetails details_id;
@@ -29,6 +34,8 @@ public class Playlist {
             inverseJoinColumns = @JoinColumn(name = "playlist_id"))
     private Set<Genre> playlistGenres;
 
+
+    @JsonProperty("tracks")
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "playlists_tracks",
             joinColumns = @JoinColumn(name = "playlist_id"),
@@ -45,11 +52,11 @@ public class Playlist {
         this.image_url = image_url;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -1,6 +1,7 @@
 package com.packt.app.userDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.packt.app.playlist.Playlist;
 import com.packt.app.user.User;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDetails {
 
     @Id

@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface TrackRepository extends CrudRepository<Track, Integer> {
+public interface TrackRepository extends CrudRepository<Track, Long> {
 
 }

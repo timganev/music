@@ -2,6 +2,7 @@ package com.packt.app.album;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.packt.app.artist.Artist;
 import com.packt.app.track.Track;
 
@@ -10,10 +11,10 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Album {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
     private String title;

@@ -2,6 +2,8 @@ package com.packt.app.artist;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.packt.app.album.Album;
 import com.packt.app.track.Track;
 
@@ -10,9 +12,9 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Artist {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
     private String name;
     private String artist_tack_url;
@@ -22,6 +24,7 @@ public class Artist {
     @JsonIgnore
     private Set<Album> artistAlbums;
 
+    @JsonProperty("tracklist")
     @OneToMany(cascade = CascadeType.ALL, mappedBy="artist")
     @JsonIgnore
     private Set<Track> artistTracks;

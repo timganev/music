@@ -1,6 +1,8 @@
 package com.packt.app.track;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.packt.app.album.Album;
 import com.packt.app.artist.Artist;
 import com.packt.app.genre.Genre;
@@ -8,28 +10,31 @@ import com.packt.app.genre.Genre;
 import javax.persistence.*;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Track {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String title;
     private String link;
     private int duration;
     private int rank;
     private String preview_url;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity= Genre.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity= Genre.class, cascade=CascadeType.ALL)
     @JoinColumn(name = "genre")
     private Genre genre;
+
+    @JsonProperty("artist")
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity= Artist.class)
+    @JoinColumn(name = "artist")
+    private Artist artist;
+
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity= Album.class)
     @JoinColumn(name = "album")
     private Album album;
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity= Artist.class)
-    @JoinColumn(name = "artist")
-    private Artist artist;
 
     public Track() {
 
@@ -46,11 +51,11 @@ public class Track {
         this.artist = artist;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -16,4 +16,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     public Iterable<Playlist> getPlaylists(){
         return playlistRepository.findAll();
     }
+    public void save(Playlist playlist){
+         playlistRepository.save(playlist);
+    }
 }

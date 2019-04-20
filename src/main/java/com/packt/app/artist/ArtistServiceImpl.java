@@ -17,4 +17,7 @@ public class ArtistServiceImpl implements ArtistService {
     public Iterable<Artist> getArtists(){
         return artistRepository.findAll();
     }
+    public void saveArtist(Artist artist){
+        artistRepository.save(artist);
+    }
 }

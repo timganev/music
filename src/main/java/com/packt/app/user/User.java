@@ -1,6 +1,7 @@
 package com.packt.app.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.packt.app.security.Role;
 import com.packt.app.userDetails.UserDetails;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     @Id
