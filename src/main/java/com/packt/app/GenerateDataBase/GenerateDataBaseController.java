@@ -1,17 +1,17 @@
 package com.packt.app.GenerateDataBase;
 
+import com.packt.app.ResponseErrorHandler.RestTemplateResponseErrorHandler;
 import com.packt.app.album.AlbumService;
 import com.packt.app.artist.ArtistService;
 import com.packt.app.genre.Genre;
 import com.packt.app.genre.GenreService;
-import com.packt.app.genre.GenreServiceImpl;
-import com.packt.app.playlist.Playlist;
 import com.packt.app.playlist.PlaylistDTO;
 import com.packt.app.playlist.PlaylistList;
 import com.packt.app.track.Track;
 import com.packt.app.track.TrackList;
 import com.packt.app.track.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,18 +27,22 @@ public class GenerateDataBaseController {
     private AlbumService albumService;
     private ArtistService artistService;
     private GenreService genreService;
+    private RestTemplate restTemplate;
 
     @Autowired
     public GenerateDataBaseController(TrackService trackService, AlbumService albumService,
-                                      ArtistService artistService, GenreService genreService) {
+                                      ArtistService artistService, GenreService genreService,
+                                      RestTemplateBuilder restTemplateBuilder) {
         this.trackService = trackService;
         this.albumService = albumService;
         this.artistService = artistService;
         this.genreService = genreService;
+        this.restTemplate = restTemplateBuilder
+                .errorHandler(new RestTemplateResponseErrorHandler())
+                .build();
     }
 
     private List<String> getPlaylistTracks(Genre genre) throws NullPointerException{
-        RestTemplate restTemplate=new RestTemplate();
 
         String url="https://api.deezer.com/search/playlist?q="+genre.getName().toLowerCase()+"&index=0&limit=70%22";
         PlaylistList response=restTemplate.getForObject(url,PlaylistList.class);
@@ -54,7 +58,6 @@ public class GenerateDataBaseController {
 
     @GetMapping("gettracks")
     private List<Track> getAllRockTracks(String genreType){
-        RestTemplate restTemplate=new RestTemplate();
 
         Genre genre = getRockGenre(genreType);
         List<Track> alltracks=new ArrayList<>();
@@ -99,7 +102,6 @@ public class GenerateDataBaseController {
         saveData(tracks, genre);
 
     }
-
 
         private Genre getRockGenre(String genreType) {
         Genre genre = new Genre();

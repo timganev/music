@@ -17,6 +17,8 @@ public class Artist {
     @Id
     private Integer id;
     private String name;
+
+    @JsonProperty("tracklist")
     private String artist_tack_url;
 
 
@@ -79,4 +81,5 @@ public class Artist {
     public void setArtistTracks(Set<Track> artistTracks) {
         this.artistTracks = artistTracks;
     }
+
 }

@@ -3,6 +3,7 @@ package com.packt.app.album;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.packt.app.artist.Artist;
 import com.packt.app.track.Track;
 
@@ -24,6 +25,7 @@ public class Album {
     @JoinColumn(name = "artist_id")
     private Artist artist;
 
+    @JsonProperty("tracks")
     @OneToMany(cascade = CascadeType.ALL, mappedBy="album")
     @JsonIgnore
     private Set<Track> albumTracks;

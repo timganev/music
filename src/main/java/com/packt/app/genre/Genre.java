@@ -12,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Genre {
 
     @Id
@@ -19,8 +20,6 @@ public class Genre {
 
     @JsonProperty("name")
     private String name;
-
-
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="genre")
     @JsonIgnore
