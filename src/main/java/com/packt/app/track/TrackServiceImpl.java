@@ -23,5 +23,20 @@ public class TrackServiceImpl implements TrackService{
         trackRepository.save(track);
     }
 
-//    public List<Track> getT
+    @Override
+    public List<Track> findAllByGenreAndDurationBetween(Integer genre, Integer min, Integer max) {
+        return trackRepository.findAllByGenreAndDurationBetween( genre,  min,  max);
+    }
+
+    @Override
+    public List<Track> findAllByGenre(Integer genre) {
+        return trackRepository.findAllByGenre(genre);
+    }
+
+    @Override
+    public List<Track> findAllByDurationBetween(Integer min, Integer max) {
+        return trackRepository.findAllByDurationBetween(min,max);
+    }
+
+
 }
