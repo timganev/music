@@ -1,6 +1,5 @@
 package com.packt.app.user;
 
-import com.packt.app.security.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +16,7 @@ import java.util.Set;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -26,18 +25,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
-		if(user == null){
+		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority(user));
 	}
 
 	private Set<SimpleGrantedAuthority> getAuthority(User user) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-		user.getRoles().forEach(role -> {
-			//authorities.add(new SimpleGrantedAuthority(role.getName()));
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-		});
+		Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+//		user.getRoles().forEach(role -> {
+//			//authorities.add(new SimpleGrantedAuthority(role.getName()));
+//            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+//		});
 		return authorities;
 		//return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
 	}
@@ -64,17 +63,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-    public User save(UserDto user) {
-	    User newUser = new User();
-	    newUser.setUsername(user.getUsername());
-	    newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-		Role role = new Role();
-		role.setName("USER");
-		Set<Role> roles = new HashSet<>();
-		roles.add(role);
-		newUser.setRoles(roles);
-        return userRepository.save(newUser);
-    }
+	public User save(UserDto user) {
+		User newUser = new User();
+		newUser.setUsername(user.getUsername());
+		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+		newUser.setRole("USER");
+		return userRepository.save(newUser);
+	}
 
 //	@EventListener(ApplicationReadyEvent.class)
 //	public void doSomethingAfterStartup() {

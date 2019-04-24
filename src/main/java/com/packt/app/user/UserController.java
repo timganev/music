@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -16,7 +16,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value="/users")
-    public List<User> listUser(){
+    public Iterable<User> listUser(){
         return userService.findAll();
     }
 
@@ -25,7 +25,6 @@ public class UserController {
     public User getOne(@PathVariable(value = "id") Long id){
         return userService.findById(id);
     }
-
 
     @PostMapping(value="/signup")
     public User saveUser(@RequestBody UserDto user){

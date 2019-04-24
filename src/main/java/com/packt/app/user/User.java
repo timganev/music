@@ -1,42 +1,42 @@
 package com.packt.app.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.packt.app.security.Role;
-import com.packt.app.userDetails.UserDetails;
-
-import javax.persistence.*;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long id;
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String username;
-    @Column
-    @JsonIgnore
+
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String role;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="user_id")
-    @JsonIgnore
-    private Set<UserDetails> userDetails;
+    public User() {
+    }
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLES", joinColumns = {
-            @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
-            @JoinColumn(name = "ROLE_ID") })
-    private Set<Role> roles;
+    public User(String username, String password, String role) {
+        super();
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -56,11 +56,11 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

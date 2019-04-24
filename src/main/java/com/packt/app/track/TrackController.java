@@ -24,14 +24,9 @@ public class TrackController {
     }
 
     @GetMapping("/tracks")
-    public Iterable<Track> getTracks(){
+    public Iterable<Track> getTracks() {
         return trackService.getTracks();
     }
-
-
-
-
-
 
 
     //    http://localhost:8080//filter?genre=1&min=1&max=200
@@ -39,7 +34,7 @@ public class TrackController {
     @RequestMapping(value = "/filter", params = {"genre", "min", "max"}, method = GET)
     @ResponseBody
     public List<Track> findAllByGenreAndDurationBetween(Integer genre, Integer min, Integer max) {
-        return trackService.findAllByGenreAndDurationBetween( genre,  min,  max);
+        return trackService.findAllByGenre_IdAndDurationBetween(genre, min, max);
     }
 
 
@@ -48,7 +43,7 @@ public class TrackController {
     @RequestMapping(value = "/findbygenre", params = {"genre"}, method = GET)
     @ResponseBody
     public List<Track> findAllByGenre(Integer genre) {
-        return trackService.findAllByGenre( genre);
+        return trackService.findAllByGenre_Id(genre);
     }
 
     //    http://localhost:8080//findbyduration?min=1&max=200
@@ -56,7 +51,7 @@ public class TrackController {
     @RequestMapping(value = "/findbyduration", params = {"min", "max"}, method = GET)
     @ResponseBody
     public List<Track> findAllByDurationBetween(Integer min, Integer max) {
-        return trackService.findAllByDurationBetween( min,max);
+        return trackService.findAllByDurationBetween(min, max);
     }
 
 

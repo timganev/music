@@ -13,7 +13,7 @@ public interface TrackRepository extends CrudRepository<Track, Long> {
 
 //    List<Beer> findByAbvBetweenOrderByAbvDesc(Integer min, Integer max);
 List<Track> findAllByGenreAndDurationBetween(Integer genre, Integer min, Integer max);
-List<Track> findAllByGenre(Integer genre);
+List<Track> findAllByGenre_Id(Integer genre);
 List<Track> findAllByDurationBetween(Integer min, Integer max);
 
 }

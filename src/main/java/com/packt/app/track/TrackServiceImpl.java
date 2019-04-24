@@ -24,13 +24,13 @@ public class TrackServiceImpl implements TrackService{
     }
 
     @Override
-    public List<Track> findAllByGenreAndDurationBetween(Integer genre, Integer min, Integer max) {
+    public List<Track> findAllByGenre_IdAndDurationBetween(Integer genre, Integer min, Integer max) {
         return trackRepository.findAllByGenreAndDurationBetween( genre,  min,  max);
     }
 
     @Override
-    public List<Track> findAllByGenre(Integer genre) {
-        return trackRepository.findAllByGenre(genre);
+    public List<Track> findAllByGenre_Id(Integer genre) {
+        return trackRepository.findAllByGenre_Id(genre);
     }
 
     @Override
