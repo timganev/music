@@ -1,6 +1,7 @@
 package com.packt.app.track;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +37,11 @@ public class TrackServiceImpl implements TrackService{
     @Override
     public List<Track> findAllByDurationBetween(Integer min, Integer max) {
         return trackRepository.findAllByDurationBetween(min,max);
+    }
+
+    @Override
+    public Track getRandomTrackFromDB() {
+        return trackRepository.getRandomTrackFromDB();
     }
 
 

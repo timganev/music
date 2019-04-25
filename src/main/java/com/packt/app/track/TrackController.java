@@ -52,7 +52,13 @@ public class TrackController {
     @ResponseBody
     public List<Track> findAllByDurationBetween(Integer min, Integer max) {
         return trackService.findAllByDurationBetween( min,max);
+
   }
 
+
+    @GetMapping("/random")
+    public Track getRandomTrack(){
+        return trackService.getRandomTrackFromDB();
+    }
 
 }

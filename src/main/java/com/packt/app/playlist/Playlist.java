@@ -9,6 +9,7 @@ import com.packt.app.user.User;
 import com.packt.app.userDetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,6 +30,8 @@ public class Playlist {
 
     private String image_url;
 
+    private double duration;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "playlists_genres",
             joinColumns = @JoinColumn(name = "genre_id"),
@@ -43,14 +46,18 @@ public class Playlist {
             inverseJoinColumns = @JoinColumn(name = "track_id"))
     private Set<Track> playlistTracks;
 
+
+
     public Playlist() {
 
     }
 
-    public Playlist(String title, User userId, String image_url) {
+    public Playlist(String title, User userId, double duration) {
         this.title = title;
-//        this.userId = userId;
-        this.image_url = image_url;
+        this.userId = userId;
+        this.duration = duration;
+        this.playlistTracks=new HashSet<>();
+        this.playlistGenres=new HashSet<>();
     }
 
     public Integer getId() {
@@ -94,11 +101,44 @@ public class Playlist {
 //        this.playlistTracks = playlistTracks;
 //    }
 
+
     public String getImage_url() {
         return image_url;
     }
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public void setDuration(double duration) {
+        this.duration = duration;
+    }
+
+    public Set<Genre> getPlaylistGenres() {
+        return playlistGenres;
+    }
+
+    public void setPlaylistGenres(Set<Genre> playlistGenres) {
+        this.playlistGenres = playlistGenres;
+    }
+
+    public Set<Track> getPlaylistTracks() {
+        return playlistTracks;
+    }
+
+    public void setPlaylistTracks(Set<Track> playlistTracks) {
+        this.playlistTracks = playlistTracks;
     }
 }
