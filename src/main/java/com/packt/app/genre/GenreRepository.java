@@ -7,4 +7,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource
 public interface GenreRepository extends CrudRepository<Genre, Long> {
 
+    Genre findByName(String name);
+
 }

@@ -27,9 +27,6 @@ public class UserDetails {
     @JoinColumn(name = "user_id")
     private User user_id;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="details_id")
-    @JsonIgnore
-    private Set<Playlist> userPlaylists;
 
     public UserDetails(String username, String firstName, String lastName, String email) {
         this.username = username;

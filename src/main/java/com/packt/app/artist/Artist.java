@@ -74,12 +74,13 @@ public class Artist {
         this.artistAlbums = artistAlbums;
     }
 
-    public Set<Track> getArtistTracks() {
-        return artistTracks;
-    }
-
-    public void setArtistTracks(Set<Track> artistTracks) {
-        this.artistTracks = artistTracks;
-    }
+//
+//    public Set<Track> getArtistTracks() {
+//        return artistTracks;
+//    }
+//
+//    public void setArtistTracks(Set<Track> artistTracks) {
+//        this.artistTracks = artistTracks;
+//    }
 
 }

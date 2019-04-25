@@ -19,7 +19,9 @@ public class Album {
     private Integer id;
 
     private String title;
-    private String album_track;
+
+    @JsonProperty("tracklist")
+    private String album_tracks;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
@@ -36,7 +38,7 @@ public class Album {
 
     public Album(String title, String album_track, Artist artist, Set<Track> albumTracks) {
         this.title = title;
-        this.album_track = album_track;
+        this.album_tracks = album_track;
         this.artist = artist;
         this.albumTracks = albumTracks;
     }
@@ -58,13 +60,13 @@ public class Album {
         this.title = title;
     }
 
-    public String getAlbum_track() {
-        return album_track;
-    }
-
-    public void setAlbum_track(String album_track) {
-        this.album_track = album_track;
-    }
+//    public String getAlbum_track() {
+//        return album_tracks;
+//    }
+//
+//    public void setAlbum_track(String album_track) {
+//        this.album_tracks = album_track;
+//    }
 
     public Artist getArtist() {
         return artist;
@@ -74,11 +76,11 @@ public class Album {
         this.artist = artist;
     }
 
-    public Set<Track> getAlbumTracks() {
-        return albumTracks;
-    }
-
-    public void setAlbumTracks(Set<Track> albumTracks) {
-        this.albumTracks = albumTracks;
-    }
+//    public Set<Track> getAlbumTracks() {
+//        return albumTracks;
+//    }
+//
+//    public void setAlbumTracks(Set<Track> albumTracks) {
+//        this.albumTracks = albumTracks;
+//    }
 }

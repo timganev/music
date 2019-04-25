@@ -42,13 +42,13 @@ public class GenerateDataBaseController {
                 .build();
     }
 
-    private List<String> getPlaylistTracks(Genre genre) throws NullPointerException{
+    private List<String> getPlaylistTracks(Genre genre) throws NullPointerException {
 
-        String url="https://api.deezer.com/search/playlist?q="+genre.getName().toLowerCase()+"&index=0&limit=70%22";
-        PlaylistList response=restTemplate.getForObject(url,PlaylistList.class);
+        String url = "https://api.deezer.com/search/playlist?q=" + genre.getName().toLowerCase() + "&index=0&limit=70%22";
+        PlaylistList response = restTemplate.getForObject(url, PlaylistList.class);
 
-        List<PlaylistDTO> list=response.getPlaylist();
-        List<String> playlistTracks=new ArrayList<>();
+        List<PlaylistDTO> list = response.getPlaylist();
+        List<String> playlistTracks = new ArrayList<>();
 
         for (PlaylistDTO playlistDTO : list) {
             playlistTracks.add(playlistDTO.getTrackUrl());
@@ -57,13 +57,13 @@ public class GenerateDataBaseController {
     }
 
     @GetMapping("gettracks")
-    private List<Track> getAllRockTracks(String genreType){
+    private List<Track> getAllRockTracks(String genreType) {
 
         Genre genre = getRockGenre(genreType);
-        List<Track> alltracks=new ArrayList<>();
+        List<Track> alltracks = new ArrayList<>();
 
         for (String playlistTrack : getPlaylistTracks(genre)) {
-            TrackList response=restTemplate.getForObject(playlistTrack,TrackList.class);
+            TrackList response = restTemplate.getForObject(playlistTrack, TrackList.class);
             alltracks.addAll(response.getTracks());
 
         }
@@ -71,8 +71,8 @@ public class GenerateDataBaseController {
     }
 
     @PostMapping("saverock")
-    private void saveRockTracks(){
-        List<Track> tracks=getAllRockTracks("Rock");
+    private void saveRockTracks() {
+        List<Track> tracks = getAllRockTracks("Rock");
         Genre genre = getRockGenre("Rock");
 
         saveData(tracks, genre);
@@ -103,14 +103,10 @@ public class GenerateDataBaseController {
 
     }
 
-        private Genre getRockGenre(String genreType) {
+    private Genre getRockGenre(String genreType) {
         Genre genre = new Genre();
 
-        for (Genre genretoUpdate : genreService.getGenres()) {
-            if (genretoUpdate.getName().equals(genreType)) {
-                genre = genretoUpdate;
-            }
-        }
+        genre=genreService.findByName(genreType);
         return genre;
     }
 
@@ -122,6 +118,7 @@ public class GenerateDataBaseController {
             albumService.saveAlbums(track.getAlbum());
             track.setGenre(genre);
             trackService.saveTrack(track);
+
         }
     }
 

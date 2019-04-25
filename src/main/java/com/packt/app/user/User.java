@@ -1,10 +1,10 @@
 package com.packt.app.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.packt.app.playlist.Playlist;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -21,6 +21,10 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="userId")
+    @JsonIgnore
+    private Set<Playlist> userPlaylists;
 
     public User() {
     }
@@ -62,5 +66,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Set<Playlist> getUserPlaylists() {
+        return userPlaylists;
+    }
+
+    public void setUserPlaylists(Set<Playlist> userPlaylists) {
+        this.userPlaylists = userPlaylists;
     }
 }

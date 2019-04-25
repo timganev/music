@@ -1,6 +1,7 @@
 package com.packt.app.track;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.packt.app.album.Album;
@@ -14,25 +15,30 @@ import javax.persistence.*;
 public class Track {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
     private String link;
     private int duration;
     private int rank;
+
+    @JsonProperty("preview")
     private String preview_url;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity= Genre.class, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Genre.class, cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinColumn(name = "genre")
     private Genre genre;
 
     @JsonProperty("artist")
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity= Artist.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Artist.class)
+    @JsonIgnore
     @JoinColumn(name = "artist")
     private Artist artist;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity= Album.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Album.class)
+    @JsonProperty("album")
     @JoinColumn(name = "album")
     private Album album;
 
