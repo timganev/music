@@ -8,6 +8,7 @@ import com.packt.app.track.Track;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,7 +17,7 @@ import java.util.Set;
 public class Genre {
 
     @Id
-    private Long id;
+    private Integer id;
 
     @JsonProperty("name")
     private String name;
@@ -29,18 +30,17 @@ public class Genre {
 
     }
 
-    public Genre(long id,String name) {
-        this.id=id;
+    public Genre(Integer id, String name) {
+        this.id = id;
         this.name = name;
-
+        this.tracks=new HashSet<>();
     }
 
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

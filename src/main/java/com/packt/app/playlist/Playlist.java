@@ -1,6 +1,7 @@
 package com.packt.app.playlist;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.packt.app.genre.Genre;
@@ -18,6 +19,7 @@ public class Playlist {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
+    @JsonIgnore
     private Integer id;
 
     @JsonProperty("title")

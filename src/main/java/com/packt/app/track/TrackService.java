@@ -11,8 +11,7 @@ public interface TrackService {
     List<Track> findAllByGenre_Id(Integer genre);
     List<Track> findAllByDurationBetween(Integer min, Integer max);
 
-    @Query(value = "SELECT * FROM track ORDER BY RAND() limit 1",
-            nativeQuery = true)
+     Track getRandomTrackFromDbByRockGenre();
      Track getRandomTrackFromDB();
 
 }

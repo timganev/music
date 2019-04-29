@@ -1,5 +1,7 @@
 package com.packt.app.track;
 
+import com.packt.app.genre.Genre;
+import com.packt.app.genre.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 
@@ -16,11 +17,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class TrackController {
 
     private TrackService trackService;
+    private GenreService genreService;
 
 
     @Autowired
-    public TrackController(TrackService trackService) {
+    public TrackController(TrackService trackService,GenreService genreService) {
         this.trackService = trackService;
+        this.genreService = genreService;
     }
 
     @GetMapping("/tracks")
@@ -55,9 +58,16 @@ public class TrackController {
 
   }
 
+    @GetMapping("/randomrock")
+    public Track getRandomTrack(String genre){
 
-    @GetMapping("/random")
+       Track track=trackService.getRandomTrackFromDbByRockGenre();
+        System.out.println(track.getGenre().getName());
+        return track;
+    }
+   @GetMapping("/random")
     public Track getRandomTrack(){
+
         return trackService.getRandomTrackFromDB();
     }
 
