@@ -1,6 +1,8 @@
 package com.packt.app.playlist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.packt.app.genre.Genre;
+import com.packt.app.genre.GenreRepository;
 import com.packt.app.track.Track;
 import com.packt.app.track.TrackRepository;
 import com.packt.app.user.User;
@@ -20,13 +22,19 @@ public class PlaylistServiceImpl implements PlaylistService {
     private PlaylistRepository playlistRepository;
     private TrackRepository trackRepository;
     private UserRepository userRepository;
+    private GenreRepository genreRepository;
 
     @Autowired
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository, TrackRepository trackRepository, UserRepository userRepository) {
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository, TrackRepository trackRepository,
+                               UserRepository userRepository, GenreRepository genreRepository) {
         this.playlistRepository = playlistRepository;
         this.trackRepository = trackRepository;
         this.userRepository = userRepository;
+        this.genreRepository = genreRepository;
     }
+
+
+
 
 
 
@@ -101,27 +109,19 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private double getCurrentDuration(double currentDuration, Playlist playlist, Track track, int countOfRandomReturns,
                                       PlaylistCredentials pl, String genre) {
+
+        Genre genre1=genreRepository.findByName(genre);
+
         while (currentDuration < pl.getDuration() + 5) {
 
             if (countOfRandomReturns >= 5) {
                 break;
             }
-            switch (genre) {
-                case "all":
-                    track = trackRepository.getRandomTrackFromDB();
-                    break;
-                case "rock":
-                    track = trackRepository.getRandomTrackFromDbByRockGenre();
-                    break;
-                case "dance":
-                    track = trackRepository.getRandomTrackFromDbByDanceGenre();
-                    break;
-                case "rb":
-                    track = trackRepository.getRandomTrackFromDbByRBGenre();
-                    break;
-                case "pop":
-                    track = trackRepository.getRandomTrackFromDbByPopGenre();
-                    break;
+            if ("all".equals(genre)) {
+                track = trackRepository.getRandomTrackFromDB();
+
+            } else {
+                track=trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
             }
 
             if (playlist.getPlaylistTracks() != null && playlist.getPlaylistTracks().contains(track)) {

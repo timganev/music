@@ -11,7 +11,7 @@ public interface TrackService {
     List<Track> findAllByGenre_Id(Integer genre);
     List<Track> findAllByDurationBetween(Integer min, Integer max);
 
-     Track getRandomTrackFromDbByRockGenre();
+    Track getRandomTrackFromDbByGenre(int genreID);
      Track getRandomTrackFromDB();
 
 }

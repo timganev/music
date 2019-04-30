@@ -57,8 +57,8 @@ public class TrackServiceImpl implements TrackService{
     }
 
     @Override
-    public Track getRandomTrackFromDbByRockGenre() {
-        return trackRepository.getRandomTrackFromDbByRockGenre();
+    public Track getRandomTrackFromDbByGenre(int genreID) {
+        return trackRepository.getRandomTrackFromDbByGenre(genreID);
     }
 
 }

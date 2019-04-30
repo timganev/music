@@ -7,7 +7,9 @@ import com.packt.app.genre.Genre;
 import org.apache.tomcat.util.bcel.classfile.Constant;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,21 +27,10 @@ List<Track> findAllByDurationBetween(Integer min, Integer max);
             nativeQuery = true)
     Track getRandomTrackFromDB();
 
-      @Query(value = QUERRY_RANDOM_TRACK_BY_ROCK_GENRE,
+      @Query(value = QUERRY_RANDOM_TRACK_BY_GENRE,
             nativeQuery = true)
-    Track getRandomTrackFromDbByRockGenre();
+    Track getRandomTrackFromDbByGenre(@Param("id") int id);
 
-      @Query(value = QUERRY_RANDOM_TRACK_BY_DANCE_GENRE,
-            nativeQuery = true)
-    Track getRandomTrackFromDbByDanceGenre();
-
-  @Query(value = QUERRY_RANDOM_TRACK_BY_RB_GENRE,
-            nativeQuery = true)
-    Track getRandomTrackFromDbByRBGenre();
-
-  @Query(value = QUERRY_RANDOM_TRACK_BY_POP_GENRE,
-            nativeQuery = true)
-    Track getRandomTrackFromDbByPopGenre();
 
 
 

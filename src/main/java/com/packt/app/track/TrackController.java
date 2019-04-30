@@ -4,10 +4,7 @@ import com.packt.app.genre.Genre;
 import com.packt.app.genre.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -59,9 +56,10 @@ public class TrackController {
   }
 
     @GetMapping("/randomrock")
-    public Track getRandomTrack(String genre){
+    public Track getRandomTrack(@RequestParam String genre){
 
-       Track track=trackService.getRandomTrackFromDbByRockGenre();
+        Genre genre1=genreService.findByName(genre);
+       Track track=trackService.getRandomTrackFromDbByGenre(genre1.getId());
         System.out.println(track.getGenre().getName());
         return track;
     }
