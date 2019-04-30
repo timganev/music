@@ -148,5 +148,10 @@ public class PlaylistServiceImpl implements PlaylistService {
        return playlistRepository.findByTitle(title).get(0).getPlaylistTracks();
     }
 
+    @Override
+    public List<Playlist> findByUserId_Username(String username) {
+        return playlistRepository.findByUserId_Username(username);
+    }
+
 
 }

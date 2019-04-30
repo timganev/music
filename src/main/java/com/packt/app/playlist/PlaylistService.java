@@ -16,7 +16,7 @@ public interface PlaylistService {
     PlaylistCredentialsList generate(HttpServletRequest req, HttpServletResponse res)throws IOException;
     List<Playlist> getPlaylistByTitle(String title);
     Set<Track> getPlaylistTracks(String title);
-
+    List<Playlist> findByUserId_Username(String username);
 
 //    PlaylistCredentialsList generate(HttpServletRequest req, HttpServletResponse res);
 
