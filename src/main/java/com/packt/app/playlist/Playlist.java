@@ -4,6 +4,7 @@ package com.packt.app.playlist;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.packt.app.artist.Artist;
 import com.packt.app.genre.Genre;
 import com.packt.app.track.Track;
 import com.packt.app.user.User;
@@ -47,6 +48,12 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "track_id"))
     private Set<Track> playlistTracks;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "playlists_artists",
+            joinColumns = @JoinColumn(name = "artist_id"),
+            inverseJoinColumns = @JoinColumn(name = "playlist_id"))
+    private Set<Artist> playlistArtists;
 
 
 
@@ -142,5 +149,13 @@ public class Playlist {
 
     public void setPlaylistTracks(Set<Track> playlistTracks) {
         this.playlistTracks = playlistTracks;
+    }
+
+    public Set<Artist> getPlaylistArtists() {
+        return playlistArtists;
+    }
+
+    public void setPlaylistArtists(Set<Artist> playlistArtists) {
+        this.playlistArtists = playlistArtists;
     }
 }

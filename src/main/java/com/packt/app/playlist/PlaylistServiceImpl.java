@@ -33,11 +33,6 @@ public class PlaylistServiceImpl implements PlaylistService {
         this.genreRepository = genreRepository;
     }
 
-
-
-
-
-
     @Override
     public Iterable<Playlist> getPlaylists(){
         return playlistRepository.findAll();
@@ -119,7 +114,6 @@ public class PlaylistServiceImpl implements PlaylistService {
             }
             if ("all".equals(genre)) {
                 track = trackRepository.getRandomTrackFromDB();
-
             } else {
                 track=trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
             }
@@ -128,7 +122,11 @@ public class PlaylistServiceImpl implements PlaylistService {
                 countOfRandomReturns++;
                 continue;
             }
+            if (playlist.getPlaylistTracks().contains(track) || playlist.getPlaylistArtists().contains(track.getArtist())){
+                continue;
+            }
             playlist.getPlaylistTracks().add(track);
+            playlist.getPlaylistArtists().add(track.getArtist());
             playlist.getPlaylistGenres().add(track.getGenre());
             currentDuration += track.getDuration();
         }
