@@ -5,6 +5,7 @@ import com.packt.app.album.AlbumService;
 import com.packt.app.artist.ArtistService;
 import com.packt.app.genre.Genre;
 import com.packt.app.genre.GenreService;
+import com.packt.app.logger.LoggerService;
 import com.packt.app.playlist.PlaylistDTO;
 import com.packt.app.playlist.PlaylistList;
 import com.packt.app.track.Track;
@@ -28,11 +29,13 @@ public class GenerateDataBaseController {
     private ArtistService artistService;
     private GenreService genreService;
     private RestTemplate restTemplate;
+    private LoggerService loggerService;
 
     @Autowired
     public GenerateDataBaseController(TrackService trackService, AlbumService albumService,
                                       ArtistService artistService, GenreService genreService,
-                                      RestTemplateBuilder restTemplateBuilder) {
+                                      RestTemplateBuilder restTemplateBuilder,
+                                      LoggerService loggerService ) {
         this.trackService = trackService;
         this.albumService = albumService;
         this.artistService = artistService;
@@ -40,6 +43,7 @@ public class GenerateDataBaseController {
         this.restTemplate = restTemplateBuilder
                 .errorHandler(new RestTemplateResponseErrorHandler())
                 .build();
+        this.loggerService=loggerService;
     }
 
     private List<String> getPlaylistTracks(Genre genre) throws NullPointerException {
@@ -76,6 +80,7 @@ public class GenerateDataBaseController {
         Genre genre = getRockGenre("Rock");
 
         saveData(tracks, genre);
+        loggerService.doStuff("Rock tracks was saved fo DB");
 
     }
 
@@ -119,6 +124,8 @@ public class GenerateDataBaseController {
             track.setGenre(genre);
             trackService.saveTrack(track);
 
+            String message=String.format("Track with genre - %s was saved to DB", genre.getName());
+            loggerService.doStuff(message);
         }
     }
 

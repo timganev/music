@@ -9,6 +9,8 @@ import com.packt.app.track.Track;
 
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -18,6 +20,7 @@ public class Album {
     @Id
     private Integer id;
 
+    @Size(min = 1,max = 30,message = "Title must be between 1 and 30 symbols")
     private String title;
 
     @JsonProperty("tracklist")
@@ -37,7 +40,7 @@ public class Album {
     }
 
     public Album(String title, String album_track, Artist artist, Set<Track> albumTracks) {
-        this.title = title;
+        setTitle(title);
         this.album_tracks = album_track;
         this.artist = artist;
         this.albumTracks = albumTracks;
@@ -48,7 +51,7 @@ public class Album {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId( Integer id) {
         this.id = id;
     }
 
@@ -56,7 +59,7 @@ public class Album {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@Valid String title) {
         this.title = title;
     }
 

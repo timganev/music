@@ -3,6 +3,7 @@ package com.packt.app.playlist;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.packt.app.genre.Genre;
 import com.packt.app.genre.GenreRepository;
+import com.packt.app.logger.LoggerService;
 import com.packt.app.track.Track;
 import com.packt.app.track.TrackRepository;
 import com.packt.app.user.User;
@@ -23,14 +24,17 @@ public class PlaylistServiceImpl implements PlaylistService {
     private TrackRepository trackRepository;
     private UserRepository userRepository;
     private GenreRepository genreRepository;
+    private LoggerService loggerService;
 
     @Autowired
     public PlaylistServiceImpl(PlaylistRepository playlistRepository, TrackRepository trackRepository,
-                               UserRepository userRepository, GenreRepository genreRepository) {
+                               UserRepository userRepository, GenreRepository genreRepository,
+                               LoggerService loggerService) {
         this.playlistRepository = playlistRepository;
         this.trackRepository = trackRepository;
         this.userRepository = userRepository;
         this.genreRepository = genreRepository;
+        this.loggerService=loggerService;
     }
 
     @Override
@@ -64,6 +68,8 @@ public class PlaylistServiceImpl implements PlaylistService {
             playlist.setDuration(currentDuration);
 
             playlistRepository.save(playlist);
+            String message=String.format("Playlist with title %s was saved to DB", playlist.getTitle());
+            loggerService.doStuff(message);
 
         }
     }
@@ -97,7 +103,8 @@ public class PlaylistServiceImpl implements PlaylistService {
                 currentCredential++;
             }
             playlistRepository.save(playlist);
-            System.out.println(playlist.getPlaylistGenres());
+
+//            System.out.println(playlist.getPlaylistGenres());
 
         }
     }
@@ -122,7 +129,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 countOfRandomReturns++;
                 continue;
             }
-            if (playlist.getPlaylistTracks().contains(track) || playlist.getPlaylistArtists().contains(track.getArtist())){
+            if (playlist.getPlaylistArtists() != null && playlist.getPlaylistArtists().contains(track.getArtist())) {
                 continue;
             }
             playlist.getPlaylistTracks().add(track);

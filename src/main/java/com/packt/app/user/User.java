@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.packt.app.playlist.Playlist;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -14,9 +16,11 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @Size(min = 2,max = 20,message = "Username must be between 2 and 20 symbols")
     private String username;
 
     @Column(nullable = false)
+    @Size(min = 2,max = 120,message = "Password must be between 2 and 20 symbols")
     private String password;
 
     @Column(nullable = false)
@@ -31,8 +35,8 @@ public class User {
 
     public User(String username, String password, String role) {
         super();
-        this.username = username;
-        this.password = password;
+        setUsername(username);
+        setPassword(password);
         this.role = role;
     }
 
@@ -48,7 +52,7 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(@Valid String username) {
         this.username = username;
     }
 
@@ -56,7 +60,7 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@Valid String password) {
         this.password = password;
     }
 

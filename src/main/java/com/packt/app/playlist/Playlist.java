@@ -67,6 +67,7 @@ public class Playlist {
         this.duration = duration;
         this.playlistTracks=new HashSet<>();
         this.playlistGenres=new HashSet<>();
+        this.playlistArtists=new HashSet<>();
     }
 
     public Integer getId() {

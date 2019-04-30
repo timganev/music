@@ -6,6 +6,8 @@ import com.packt.app.playlist.Playlist;
 import com.packt.app.user.User;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -16,11 +18,13 @@ public class UserDetails {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
-    private String username;
-
+    @Size(min = 2,max = 25,message = "First Name must be between 2 and 25 symbols")
     private String firstName;
+
+    @Size(min = 2,max = 25,message = "Last Name must be between 2 and 25 symbols")
     private String lastName;
+
+    @Size(min = 2,max = 50,message = "Email must be between 2 and 50 symbols")
     private String email;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,11 +32,10 @@ public class UserDetails {
     private User user_id;
 
 
-    public UserDetails(String username, String firstName, String lastName, String email) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
+    public UserDetails(String firstName, String lastName, String email) {
+       setFirstName(firstName);
+        setLastName(lastName);
+        setEmail(email);
     }
 
     public UserDetails() {
@@ -47,19 +50,12 @@ public class UserDetails {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(@Valid String firstName) {
         this.firstName = firstName;
     }
 
@@ -67,7 +63,7 @@ public class UserDetails {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(@Valid String lastName) {
         this.lastName = lastName;
     }
 
@@ -75,7 +71,7 @@ public class UserDetails {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@Valid String email) {
         this.email = email;
     }
 }
