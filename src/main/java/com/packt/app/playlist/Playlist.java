@@ -11,7 +11,10 @@ import com.packt.app.user.User;
 import com.packt.app.userDetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,6 +27,7 @@ public class Playlist {
     private Integer id;
 
     @JsonProperty("title")
+    @Size(min = 2,max = 25,message = "Playlist title must be between 2 and 25 symbols")
     private String title;
 
     @JsonProperty("creator")
@@ -55,14 +59,12 @@ public class Playlist {
             inverseJoinColumns = @JoinColumn(name = "playlist_id"))
     private Set<Artist> playlistArtists;
 
-
-
     public Playlist() {
 
     }
 
     public Playlist(String title, User userId, double duration) {
-        this.title = title;
+        setTitle(title);
         this.userId = userId;
         this.duration = duration;
         this.playlistTracks=new HashSet<>();
@@ -82,7 +84,8 @@ public class Playlist {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@Valid String title) {
+
         this.title = title;
     }
 
@@ -159,4 +162,6 @@ public class Playlist {
     public void setPlaylistArtists(Set<Artist> playlistArtists) {
         this.playlistArtists = playlistArtists;
     }
+
+
 }
