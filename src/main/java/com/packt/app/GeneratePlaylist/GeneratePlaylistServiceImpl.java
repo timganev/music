@@ -60,6 +60,12 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             String genre = pl.getGenre();
 
             currentDuration = getCurrentDuration(currentDuration, playlist, track, countOfRandomReturns, pl, genre);
+
+        if (currentDuration==0){
+            String message=String.format("No tracks matched in genre %s with duration", pl.getGenre(),pl.getDuration());
+            logger.debug(message);
+
+        }
             playlist.setDuration(currentDuration);
 
             if (playlistRepository.findByTitle(title)!=null) {
@@ -99,6 +105,13 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 currentDuration = getCurrentDuration(currentDuration, playlist,
                         track, countOfRandomReturns, pl, genre);
 
+                if (currentDuration==0){
+                    String message=String.format("No tracks matched in genre %s with duration", pl.getGenre(),pl.getDuration());
+                    logger.debug(message);
+                    currentCredential++;
+                    continue;
+                }
+
                 durationToSet+=currentDuration;
                 currentDuration=0;
                 playlist.setDuration(durationToSet);
@@ -112,6 +125,12 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
         }
 
+        if (playlist.getPlaylistTracks().isEmpty()){
+            logger.error("Have not tracks to get in playlist with this duration and genres");
+            throw new NullPointerException("Have not tracks to get in playlist with this duration and genres");
+        }
+
+        playlist.setUsername(userName);
         playlistRepository.save(playlist);
         String message=String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
         logger.debug(message);
@@ -126,7 +145,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
         Genre genre1=genreRepository.findByName(genre);
 
-        while (currentDuration < pl.getDuration() + 5) {
+        while (currentDuration < pl.getDuration() +120) {
 
             if (countOfRandomReturns >= 5) {
                 break;
@@ -135,6 +154,9 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 track = trackRepository.getRandomTrackFromDB();
             } else {
                 track=trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
+            }
+            if (track.getDuration()>pl.getDuration()+120){
+                break;
             }
 
             if (playlist.getPlaylistTracks() != null && playlist.getPlaylistTracks().contains(track)) {

@@ -39,6 +39,8 @@ public class Playlist {
 
     private double duration;
 
+    private String username;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "playlists_genres",
             joinColumns = @JoinColumn(name = "genre_id"),
@@ -163,5 +165,11 @@ public class Playlist {
         this.playlistArtists = playlistArtists;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
