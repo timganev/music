@@ -21,11 +21,6 @@ public class GenreController {
         return genreService.getGenres();
     }
 
-    @GetMapping("/savegenre")
-    public void saveGenres() {
-       genreService.saveGenres();
-    }
-
     @GetMapping("/genre/{name}")
     public Genre findByName(@PathVariable String name){
       return genreService.findByName(name);

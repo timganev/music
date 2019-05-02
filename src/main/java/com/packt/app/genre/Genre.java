@@ -17,6 +17,7 @@ import java.util.Set;
 public class Genre {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
     @JsonProperty("name")
@@ -30,8 +31,7 @@ public class Genre {
 
     }
 
-    public Genre(Integer id, String name) {
-        this.id = id;
+    public Genre(String name) {
         this.name = name;
         this.tracks=new HashSet<>();
     }

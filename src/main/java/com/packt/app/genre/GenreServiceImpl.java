@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.packt.app.constants.Constants.CREATE_PLAYLIST_MESSAGE;
 import static com.packt.app.constants.Constants.DOWNLOADED_GENRES_SAVED_MESSAGE;
 import static com.packt.app.constants.Constants.GET_GENRE_BY_NAME_MESSAGE;
 
@@ -28,12 +27,16 @@ public class GenreServiceImpl implements GenreService {
       return genreRepository.findAll();
     }
 
-    public void saveGenres(){
+    public List<Genre> downloadGenresFromAPI(){
         RestTemplate restTemplate = new RestTemplate();
         GenreList response = restTemplate.getForObject(
                 "https://api.deezer.com/genre",
                 GenreList.class);
-        List<Genre> genres = response.getGenres();
+        return response.getGenres();
+    }
+
+    public void saveGenres(){
+        List<Genre> genres = downloadGenresFromAPI();
 
         List<Genre> existingGenres= (List<Genre>) genreRepository.findAll();
 

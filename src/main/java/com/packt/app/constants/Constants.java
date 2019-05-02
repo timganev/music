@@ -10,6 +10,8 @@ public interface Constants{
     String GET_PLAYLIST_TRACKS_MESSAGE="Get tracks of playlist title %s ";
     String SAVE_PLAYLIST_TO_DB_MESSAGE="Playlist with title %s was saved to database ";
     String GET_ALL_PLAYLISTS_MESSAGE="Get all playlists from database ";
+    String THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE="Can not save playlist with this title! Playlist with this title already exist";
+    String THROW_WHEN_PLAYLIST_HAS_NO_TRACKS_MESSAGE="This playlist has no tracks";
 
     String SAVE_TRACK_TO_DB_MESSAGE ="Track with genre - %s was saved to database";
     String DOWNLOADED_RB_TRACKS_SAVED_MESSAGE ="Downloaded tracks from external API with genre R&B was saved to database";

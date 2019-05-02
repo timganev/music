@@ -15,11 +15,12 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Artist {
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
     private String name;
 
     @JsonProperty("tracklist")
-    private String artist_tack_url;
+    private String artist_track_url;
 
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="artist")
@@ -31,10 +32,9 @@ public class Artist {
     @JsonIgnore
     private Set<Track> artistTracks;
 
-    public Artist(int id, String name, String artist_tack_url, int album_id) {
-        this.id = id;
+    public Artist( String name, String artist_track_url) {
         this.name = name;
-        this.artist_tack_url = artist_tack_url;
+        this.artist_track_url = artist_track_url;
     }
 
 
@@ -58,12 +58,12 @@ public class Artist {
         this.name = name;
     }
 
-    public String getArtist_tack_url() {
-        return artist_tack_url;
+    public String getArtist_track_url() {
+        return artist_track_url;
     }
 
-    public void setArtist_tack_url(String artist_tack_url) {
-        this.artist_tack_url = artist_tack_url;
+    public void setArtist_track_url(String artist_track_url) {
+        this.artist_track_url = artist_track_url;
     }
 
     public Set<Album> getArtistAlbums() {
