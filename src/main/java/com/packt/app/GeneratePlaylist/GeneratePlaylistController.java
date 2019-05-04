@@ -21,24 +21,10 @@ public class GeneratePlaylistController {
     }
 
 
-    @PostMapping("generateone")
-    public void generateByOneGenre(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        generatePlaylistService.saveGeneratedPlaylistByOneGenre(req, res);
-    }
-
-    @PostMapping("generatemore")
-    public void generateByMoreGenre(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        generatePlaylistService.saveGeneratedPlaylistByMoreGenre(req, res);
-    }
-
     @PostMapping("generate")
     public void generatePlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        generatePlaylistService.saveGeneratedPlaylist(req, res);
+        generatePlaylistService.generatePlaylist(req,res);
     }
-
-
-
-
 
 
 }

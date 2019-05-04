@@ -9,6 +9,8 @@ public class PlaylistCredentialsList {
 
     private String username;
     private String title;
+    private boolean sameartist;
+    private boolean topranks;
 
     @JsonProperty("data")
     private List<PlaylistCredentials> credentialsList;
@@ -17,9 +19,12 @@ public class PlaylistCredentialsList {
         credentialsList = new ArrayList<>();
     }
 
-    public PlaylistCredentialsList(String username, String title, List<PlaylistCredentials> credentialsList) {
+    public PlaylistCredentialsList(String username, String title, boolean sameartist, boolean topranks,
+                                   List<PlaylistCredentials> credentialsList) {
         this.username = username;
         this.title = title;
+        this.sameartist = sameartist;
+        this.topranks = topranks;
         this.credentialsList = credentialsList;
     }
 
@@ -49,5 +54,21 @@ public class PlaylistCredentialsList {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isSameartist() {
+        return sameartist;
+    }
+
+    public void setSameartist(boolean sameartist) {
+        this.sameartist = sameartist;
+    }
+
+    public boolean isTopranks() {
+        return topranks;
+    }
+
+    public void setTopranks(boolean topranks) {
+        this.topranks = topranks;
     }
 }

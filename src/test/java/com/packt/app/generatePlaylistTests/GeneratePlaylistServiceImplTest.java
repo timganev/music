@@ -36,21 +36,21 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 public class GeneratePlaylistServiceImplTest {
 
-
-    @Test
-    public void getCurrentDuration_Should_Return_Playlist_CurrentDuration() {
-
-        GeneratePlaylistService generatePlaylistService=Mockito.mock(GeneratePlaylistService.class);;
-        PlaylistCredentials playlistCredentials=new PlaylistCredentials("All",100);
-
-        //Act
-        double result = generatePlaylistService.getCurrentDuration(0,new Playlist(),0,
-                                                                        playlistCredentials,"All");
-
-        //Assert
-        Assert.assertTrue(result >= 0);
-
-    }
+//
+//    @Test
+//    public void getCurrentDuration_Should_Return_Playlist_CurrentDuration() {
+//
+//        GeneratePlaylistService generatePlaylistService=Mockito.mock(GeneratePlaylistService.class);;
+//        PlaylistCredentials playlistCredentials=new PlaylistCredentials("All",100);
+//
+//        //Act
+//        double result = generatePlaylistService.getCurrentDuration(0,new Playlist(),0,
+//                                                                        playlistCredentials,"All");
+//
+//        //Assert
+//        Assert.assertTrue(result >= 0);
+//
+//    }
 
 //    @Test
 //    public void saveGeneratedPlaylist_Should_Save_Generated_Plylist() throws IOException {

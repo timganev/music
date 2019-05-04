@@ -12,16 +12,36 @@ import java.util.List;
 import java.util.Set;
 
 public interface GeneratePlaylistService {
-    Playlist generatePlaylistByOneGenre(HttpServletRequest req, HttpServletResponse res) throws IOException;
-    void saveGeneratedPlaylistByOneGenre(HttpServletRequest req, HttpServletResponse res) throws IOException;
-    void saveGeneratedPlaylistByMoreGenre(HttpServletRequest req, HttpServletResponse res) throws IOException;
-    Playlist generatePlaylistByMoreGenres(HttpServletRequest req, HttpServletResponse res)throws IOException ;
+
+    void generatePlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException;
+
+    Playlist generatePlaylistByOneGenre(String title, String userName,
+                                        List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
+                                        boolean isTopRankAllow);
+
+    Playlist generatePlaylistByMoreGenres(String title, String userName,
+                                          List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
+                                          boolean isTopRankAllow) ;
+
+    Playlist generatePlaylistWithoutGenre(String title, String userName,
+                                          List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
+                                          boolean isTopRankAllow);
+
     PlaylistCredentialsList generate(HttpServletRequest req, HttpServletResponse res)throws IOException;
+
     double getCurrentDuration(double currentDuration, Playlist playlist, int countOfRandomReturns,
-                              PlaylistCredentials pl, String genre);
+                              PlaylistCredentials pl, String genre,boolean isSameArtistAllow,boolean isTopRankAllow);
 
-    void saveGeneratedPlaylist(HttpServletRequest req, HttpServletResponse res)throws IOException;
+    void saveGeneratedPlaylistWithoutGenre(String title, String userName,
+                                           List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
+                                           boolean isTopRankAllow);
+    void saveGeneratedPlaylistByOneGenre(String title, String userName,
+                                         List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
+                                         boolean isTopRankAllow);
+    void saveGeneratedPlaylistByMoreGenre(String title, String userName,
+                                          List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
+                                          boolean isTopRankAllow);
 
-    Set<Track> getTracksByGenreOrderedByRankDesc(String genre);
+    List<Track> getTracksByGenreOrderedByRankDesc(String genre);
 
 }

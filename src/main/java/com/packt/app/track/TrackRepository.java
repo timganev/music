@@ -32,7 +32,7 @@ List<Track> findAllByDurationBetween(Integer min, Integer max);
             nativeQuery = true)
     Track getRandomTrackFromDbByGenre(@Param("id") int id);
 
-      Set<Track> getAllByGenreOrderByRankDesc(Genre genre);
+      List<Track> getAllByGenreOrderByRankDesc(Genre genre);
 
 
 

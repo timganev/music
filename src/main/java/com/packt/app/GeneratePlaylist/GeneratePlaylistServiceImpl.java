@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.packt.app.constants.Constants.*;
 
@@ -35,7 +35,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
     @Autowired
     public GeneratePlaylistServiceImpl(PlaylistRepository playlistRepository, TrackRepository trackRepository,
-                               UserRepository userRepository, GenreRepository genreRepository) {
+                                       UserRepository userRepository, GenreRepository genreRepository) {
         this.playlistRepository = playlistRepository;
         this.trackRepository = trackRepository;
         this.userRepository = userRepository;
@@ -44,117 +44,140 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
 
     @Override
-    public void saveGeneratedPlaylistByOneGenre(HttpServletRequest req, HttpServletResponse res) throws IOException{
-        Playlist playlist=generatePlaylistByOneGenre(req,res);
-
-        playlistRepository.save(playlist);
-        String message=String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
-        logger.debug(message);
-    }
-
-    @Override
-    public void saveGeneratedPlaylistByMoreGenre(HttpServletRequest req, HttpServletResponse res) throws IOException{
-        Playlist playlist=generatePlaylistByMoreGenres(req,res);
-
-        playlistRepository.save(playlist);
-        String message=String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
-        logger.debug(message);
-    }
-
-    @Override
-    public void saveGeneratedPlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException{
-        Playlist playlist=generatePlaylist(req,res);
-
-        playlistRepository.save(playlist);
-        String message=String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
-        logger.debug(message);
-    }
-
-
-    public Playlist generatePlaylistByOneGenre(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public void generatePlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException {
         PlaylistCredentialsList playlistCredentialsList = generate(req, res);
         String title = playlistCredentialsList.getTitle();
         String userName = playlistCredentialsList.getUsername();
+        boolean isSameArtistAllow = playlistCredentialsList.isSameartist();
+        boolean isTopRankAllow = playlistCredentialsList.isTopranks();
         List<PlaylistCredentials> playlistCredentials = playlistCredentialsList.getPlaylistCredentials();
+
+        if (playlistCredentials.size() == 1 && playlistCredentials.get(0).getGenre() == null ) {
+           saveGeneratedPlaylistWithoutGenre(title, userName, playlistCredentials, isSameArtistAllow, isTopRankAllow);
+
+        } else if (playlistCredentials.size() == 1 && playlistCredentials.get(0).getGenre() != null ) {
+            saveGeneratedPlaylistByOneGenre(title, userName, playlistCredentials, isSameArtistAllow, isTopRankAllow);
+
+        }else if (playlistCredentials.size() >1 ){
+            saveGeneratedPlaylistByMoreGenre(title, userName, playlistCredentials, isSameArtistAllow, isTopRankAllow);
+
+        }
+
+    }
+
+
+
+    @Override
+    public void saveGeneratedPlaylistByOneGenre(String title, String userName,
+                                                List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
+                                                boolean isTopRankAllow) {
+        Playlist playlist = generatePlaylistByOneGenre(title, userName, playlistCredentials, isSameArtistAllow1, isTopRankAllow);
+        playlistRepository.save(playlist);
+        String message = String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
+        logger.debug(message);
+    }
+
+    @Override
+    public void saveGeneratedPlaylistByMoreGenre(String title, String userName,
+                                                 List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
+                                                 boolean isTopRankAllow) {
+        Playlist playlist = generatePlaylistByMoreGenres(title, userName,playlistCredentials,isSameArtistAllow1,isTopRankAllow);
+        playlistRepository.save(playlist);
+        String message = String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
+        logger.debug(message);
+    }
+
+    @Override
+    public void saveGeneratedPlaylistWithoutGenre(String title, String userName,
+                                                  List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
+                                                  boolean isTopRankAllow) {
+        Playlist playlist = generatePlaylistWithoutGenre(title, userName,playlistCredentials,isSameArtistAllow,isTopRankAllow);
+        playlistRepository.save(playlist);
+        String message = String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
+        logger.debug(message);
+    }
+
+
+
+    public Playlist generatePlaylistByOneGenre(String title, String userName,
+                                               List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
+                                               boolean isTopRankAllow) {
 
         double currentDuration = 0;
         User user = userRepository.findByUsername(userName);
         Playlist playlist = new Playlist(title, user, 0);
         Track track = new Track();
 
-            int countOfRandomReturns=0;
-            PlaylistCredentials pl = playlistCredentials.get(0);
-            String genre = pl.getGenre();
+        int countOfRandomReturns = 0;
+        PlaylistCredentials pl = playlistCredentials.get(0);
+        String genre = pl.getGenre();
 
-            currentDuration = getCurrentDuration(currentDuration, playlist, countOfRandomReturns, pl, genre);
+        currentDuration = getCurrentDuration(currentDuration, playlist, countOfRandomReturns, pl, genre,isSameArtistAllow,isTopRankAllow);
 
-        if (currentDuration==0){
-            String message=String.format("No tracks matched in genre %s with duration", pl.getGenre(),pl.getDuration());
+        if (currentDuration == 0) {
+            String message = String.format("No tracks matched in genre %s with duration", pl.getGenre(), pl.getDuration());
             logger.debug(message);
 
         }
-            playlist.setDuration(currentDuration);
+        playlist.setDuration(currentDuration);
 
-            if (playlistRepository.findByTitle(title)!=null) {
-                String message=String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
-                logger.error(message);
-                throw new IllegalArgumentException("Playlist with this title already exist");
-
-            }
-
-        if (playlist.getPlaylistTracks().isEmpty()){
-            logger.error("Have not tracks to get in playlist with this duration and genres");
-            throw new NullPointerException("Have not tracks to get in playlist with this duration and genres");
-        }
-            playlist.setUsername(userName);
-            return playlist;
-
-    }
-
-
-    public Playlist generatePlaylistByMoreGenres(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        PlaylistCredentialsList playlistCredentialsList = generate(req, res);
-        String title = playlistCredentialsList.getTitle();
-        String userName = playlistCredentialsList.getUsername();
-        List<PlaylistCredentials> playlistCredentials = playlistCredentialsList.getPlaylistCredentials();
-
-
-        double currentDuration = 0;
-        User user = userRepository.findByUsername(userName);
-
-        Playlist playlist = new Playlist(title, user, 0);
-        Track track = new Track();
-
-            int currentCredential = 0;
-            int countOfRandomReturns = 0;
-            int durationToSet=0;
-            while (currentCredential < playlistCredentials.size()) {
-                PlaylistCredentials pl = playlistCredentials.get(currentCredential);
-                String genre = pl.getGenre();
-
-                currentDuration = getCurrentDuration(currentDuration, playlist,
-                        countOfRandomReturns, pl, genre);
-
-                if (currentDuration==0){
-                    String message=String.format("No tracks matched in genre %s with duration", pl.getGenre(),pl.getDuration());
-                    logger.debug(message);
-                    currentCredential++;
-                    continue;
-                }
-                durationToSet+=currentDuration;
-                currentDuration=0;
-                playlist.setDuration(durationToSet);
-                currentCredential++;
-            }
-
-        if (playlistRepository.findByTitle(title)!=null) {
-            String message=String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
+        if (playlistRepository.findByTitle(title) != null) {
+            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
             logger.error(message);
             throw new IllegalArgumentException("Playlist with this title already exist");
 
         }
 
-        if (playlist.getPlaylistTracks().isEmpty()){
+        if (playlist.getPlaylistTracks().isEmpty()) {
+            logger.error("Have not tracks to get in playlist with this duration and genres");
+            throw new NullPointerException("Have not tracks to get in playlist with this duration and genres");
+        }
+        playlist.setUsername(userName);
+        return playlist;
+
+    }
+
+
+    public Playlist generatePlaylistByMoreGenres(String title, String userName,
+                                                 List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
+                                                 boolean isTopRankAllow){
+
+        double currentDuration = 0;
+        User user = userRepository.findByUsername(userName);
+
+        Playlist playlist = new Playlist(title, user, 0);
+        Track track = new Track();
+
+        int currentCredential = 0;
+        int countOfRandomReturns = 0;
+        int durationToSet = 0;
+        while (currentCredential < playlistCredentials.size()) {
+            PlaylistCredentials pl = playlistCredentials.get(currentCredential);
+            String genre = pl.getGenre();
+
+            currentDuration = getCurrentDuration(currentDuration, playlist,
+                    countOfRandomReturns, pl, genre,isSameArtistAllow,isTopRankAllow);
+
+            if (currentDuration == 0) {
+                String message = String.format("No tracks matched in genre %s with duration", pl.getGenre(), pl.getDuration());
+                logger.debug(message);
+                currentCredential++;
+                continue;
+            }
+            durationToSet += currentDuration;
+            currentDuration = 0;
+            playlist.setDuration(durationToSet);
+            currentCredential++;
+        }
+
+        if (playlistRepository.findByTitle(title) != null) {
+            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
+            logger.error(message);
+            throw new IllegalArgumentException("Playlist with this title already exist");
+
+        }
+
+        if (playlist.getPlaylistTracks().isEmpty()) {
             logger.error("Have not tracks to get in playlist with this duration and genres");
             throw new NullPointerException("Have not tracks to get in playlist with this duration and genres");
         }
@@ -168,39 +191,49 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
 
     public double getCurrentDuration(double currentDuration, Playlist playlist, int countOfRandomReturns,
-                                      PlaylistCredentials pl, String genre) {
-        Genre genre1=genreRepository.findByName(genre);
+                                     PlaylistCredentials pl, String genre,boolean isSameArtistAllow,boolean isTopRankAllow) {
+        Genre genre1 = genreRepository.findByName(genre);
+        List<Track> tracks=new ArrayList<>();
+        int indexToIter=0;
 
-        while (currentDuration < pl.getDuration() +60) {
+        if (isTopRankAllow){
+             tracks=getTracksByGenreOrderedByRankDesc(genre);
+        }
+        while (currentDuration < pl.getDuration() + 120) {
 
-            if (countOfRandomReturns >= 5) {
+            if (countOfRandomReturns > 10) {
                 break;
             }
             Track track;
 
-            if ("all".equals(genre)) {
-                track = trackRepository.getRandomTrackFromDB();
-            } else {
-                track =trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
+            if (!isTopRankAllow) {
+                if ("all".equals(genre)) {
+                    track = trackRepository.getRandomTrackFromDB();
+                } else {
+                    track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
+                }
+                if (track.getDuration() > pl.getDuration() + 120) {
+                   break;
+                }
+            }else {
+                track=tracks.get(indexToIter);
+                indexToIter++;
             }
-            if (track.getDuration()>pl.getDuration()+120){
-                break;
-            }
-
-
+        countOfRandomReturns=0;
             if (playlist.getPlaylistTracks() != null && playlist.getPlaylistTracks().contains(track)) {
-                while (playlist.getPlaylistTracks().contains(track)){
-                    track =trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
+                while (playlist.getPlaylistTracks().contains(track)) {
+                    track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
                     countOfRandomReturns++;
-                    if (countOfRandomReturns>5){
+                    if (countOfRandomReturns > 5) {
                         break;
                     }
                 }
             }
 
-
-            if (playlist.getPlaylistArtists() != null && playlist.getPlaylistArtists().contains(track.getArtist())) {
-                continue;
+            if (!isSameArtistAllow) {
+                if (playlist.getPlaylistArtists() != null && playlist.getPlaylistArtists().contains(track.getArtist())) {
+                    continue;
+                }
             }
             playlist.getPlaylistTracks().add(track);
             playlist.getPlaylistArtists().add(track.getArtist());
@@ -210,11 +243,9 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         return currentDuration;
     }
 
-    public Playlist generatePlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        PlaylistCredentialsList playlistCredentialsList = generate(req, res);
-        String title = playlistCredentialsList.getTitle();
-        String userName = playlistCredentialsList.getUsername();
-        List<PlaylistCredentials> playlistCredentials = playlistCredentialsList.getPlaylistCredentials();
+    public Playlist generatePlaylistWithoutGenre(String title, String userName,
+                                                 List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
+                                                 boolean isTopRankAllow) {
         PlaylistCredentials pl = playlistCredentials.get(0);
 
         double currentDuration = 0;
@@ -224,20 +255,20 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         Track track = new Track();
 
         int countOfRandomReturns = 0;
-        int durationToSet=0;
+        int durationToSet = 0;
 
-        track =trackRepository.getRandomTrackFromDB();
+        track = trackRepository.getRandomTrackFromDB();
 
-        while (currentDuration < pl.getDuration() +120) {
+        while (currentDuration < pl.getDuration() + 120) {
             if (track.getDuration() > pl.getDuration() + 120) {
                 break;
             }
 
             if (playlist.getPlaylistTracks() != null && playlist.getPlaylistTracks().contains(track)) {
-                while (playlist.getPlaylistTracks().contains(track)){
-                    track =trackRepository.getRandomTrackFromDB();
+                while (playlist.getPlaylistTracks().contains(track)) {
+                    track = trackRepository.getRandomTrackFromDB();
                     countOfRandomReturns++;
-                    if (countOfRandomReturns>5){
+                    if (countOfRandomReturns > 5) {
                         break;
                     }
                 }
@@ -247,8 +278,10 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 countOfRandomReturns++;
                 continue;
             }
-            if (playlist.getPlaylistArtists() != null && playlist.getPlaylistArtists().contains(track.getArtist())) {
-                continue;
+            if (!isSameArtistAllow) {
+                if (playlist.getPlaylistArtists() != null && playlist.getPlaylistArtists().contains(track.getArtist())) {
+                    continue;
+                }
             }
             playlist.getPlaylistTracks().add(track);
             playlist.getPlaylistArtists().add(track.getArtist());
@@ -256,22 +289,22 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             currentDuration += track.getDuration();
         }
 
-        if (currentDuration==0){
-            String message=String.format("No tracks matched in genre %s with duration", pl.getGenre(),pl.getDuration());
+        if (currentDuration == 0) {
+            String message = String.format("No tracks matched in genre %s with duration", pl.getGenre(), pl.getDuration());
             logger.debug(message);
             throw new NullPointerException();
         }
 
-        durationToSet+=currentDuration;
+        durationToSet += currentDuration;
         playlist.setDuration(durationToSet);
 
-        if (playlistRepository.findByTitle(title)!=null) {
-            String message=String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
+        if (playlistRepository.findByTitle(title) != null) {
+            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
             logger.error(message);
             throw new IllegalArgumentException("Playlist with this title already exist");
         }
 
-        if (playlist.getPlaylistTracks().isEmpty()){
+        if (playlist.getPlaylistTracks().isEmpty()) {
             logger.error("Have not tracks to get in playlist with this duration and genres");
             throw new NullPointerException("Have not tracks to get in playlist with this duration");
         }
@@ -290,10 +323,9 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
     }
 
 
-    public Set<Track> getTracksByGenreOrderedByRankDesc(String genre){
-        Genre genre1=genreRepository.findByName(genre);
-        Set<Track> tracks=trackRepository.getAllByGenreOrderByRankDesc(genre1);
-        System.out.println();
+    public List<Track> getTracksByGenreOrderedByRankDesc(String genre) {
+        Genre genre1 = genreRepository.findByName(genre);
+        List<Track> tracks = trackRepository.getAllByGenreOrderByRankDesc(genre1);
         return tracks;
     }
 
