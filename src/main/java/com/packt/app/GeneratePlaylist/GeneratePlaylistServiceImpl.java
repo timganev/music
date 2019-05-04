@@ -105,13 +105,19 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
         double currentDuration = 0;
         User user = userRepository.findByUsername(userName);
-        Playlist playlist = new Playlist(title, user, 0);
+        Playlist playlist = new Playlist(title, user, 0,0);
         Track track = new Track();
 
         int countOfRandomReturns = 0;
         PlaylistCredentials pl = playlistCredentials.get(0);
         String genre = pl.getGenre();
 
+        if (playlistRepository.findByTitle(title) != null) {
+            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
+            logger.error(message);
+            throw new IllegalArgumentException("Playlist with this title already exist");
+
+        }
         currentDuration = getCurrentDuration(currentDuration, playlist, countOfRandomReturns, pl, genre,isSameArtistAllow,isTopRankAllow);
 
         if (currentDuration == 0) {
@@ -121,17 +127,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         }
         playlist.setDuration(currentDuration);
 
-        if (playlistRepository.findByTitle(title) != null) {
-            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
-            logger.error(message);
-            throw new IllegalArgumentException("Playlist with this title already exist");
 
-        }
-
-        if (playlist.getPlaylistTracks().isEmpty()) {
-            logger.error("Have not tracks to get in playlist with this duration and genres");
-            throw new NullPointerException("Have not tracks to get in playlist with this duration and genres");
-        }
         playlist.setUsername(userName);
         return playlist;
 
@@ -145,12 +141,20 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         double currentDuration = 0;
         User user = userRepository.findByUsername(userName);
 
-        Playlist playlist = new Playlist(title, user, 0);
+        Playlist playlist = new Playlist(title, user, 0,0);
         Track track = new Track();
 
         int currentCredential = 0;
         int countOfRandomReturns = 0;
         int durationToSet = 0;
+
+        if (playlistRepository.findByTitle(title) != null) {
+            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
+            logger.error(message);
+            throw new IllegalArgumentException("Playlist with this title already exist");
+
+        }
+
         while (currentCredential < playlistCredentials.size()) {
             PlaylistCredentials pl = playlistCredentials.get(currentCredential);
             String genre = pl.getGenre();
@@ -170,18 +174,6 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             currentCredential++;
         }
 
-        if (playlistRepository.findByTitle(title) != null) {
-            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
-            logger.error(message);
-            throw new IllegalArgumentException("Playlist with this title already exist");
-
-        }
-
-        if (playlist.getPlaylistTracks().isEmpty()) {
-            logger.error("Have not tracks to get in playlist with this duration and genres");
-            throw new NullPointerException("Have not tracks to get in playlist with this duration and genres");
-        }
-
         playlist.setUsername(userName);
         return playlist;
 
@@ -195,6 +187,8 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         Genre genre1 = genreRepository.findByName(genre);
         List<Track> tracks=new ArrayList<>();
         int indexToIter=0;
+        int averageRank=0;
+        int currentRank=0;
 
         if (isTopRankAllow){
              tracks=getTracksByGenreOrderedByRankDesc(genre);
@@ -238,8 +232,16 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             playlist.getPlaylistTracks().add(track);
             playlist.getPlaylistArtists().add(track.getArtist());
             playlist.getPlaylistGenres().add(track.getGenre());
+            currentRank+= track.getRank();
             currentDuration += track.getDuration();
+
         }
+        if (playlist.getPlaylistTracks().isEmpty()) {
+            logger.error("Have not tracks to get in playlist with this duration and genres");
+            throw new NullPointerException("Have not tracks to get in playlist with this duration and genres");
+        }
+        averageRank=currentRank/playlist.getPlaylistTracks().size();
+        playlist.setAvgrank(averageRank);
         return currentDuration;
     }
 
@@ -249,13 +251,15 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         PlaylistCredentials pl = playlistCredentials.get(0);
 
         double currentDuration = 0;
-        User user = userRepository.findByUsername(userName);
-
-        Playlist playlist = new Playlist(title, user, 0);
-        Track track = new Track();
-
         int countOfRandomReturns = 0;
         int durationToSet = 0;
+        int averageRank=0;
+        int currentRank=0;
+
+        User user = userRepository.findByUsername(userName);
+
+        Playlist playlist = new Playlist(title, user, 0,0);
+        Track track = new Track();
 
         track = trackRepository.getRandomTrackFromDB();
 
@@ -286,7 +290,8 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             playlist.getPlaylistTracks().add(track);
             playlist.getPlaylistArtists().add(track.getArtist());
             playlist.getPlaylistGenres().add(track.getGenre());
-            currentDuration += track.getDuration();
+            currentRank+= track.getRank();
+            currentDuration+=track.getDuration();
         }
 
         if (currentDuration == 0) {
@@ -295,8 +300,6 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             throw new NullPointerException();
         }
 
-        durationToSet += currentDuration;
-        playlist.setDuration(durationToSet);
 
         if (playlistRepository.findByTitle(title) != null) {
             String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
@@ -309,6 +312,10 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             throw new NullPointerException("Have not tracks to get in playlist with this duration");
         }
 
+        averageRank=currentRank/playlist.getPlaylistTracks().size();
+        playlist.setAvgrank(averageRank);
+        durationToSet += currentDuration;
+        playlist.setDuration(durationToSet);
         playlist.setUsername(userName);
         return playlist;
 

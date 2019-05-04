@@ -29,7 +29,7 @@ public class PlaylistServiceImplTest {
         PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
         PlaylistService playlistService=new PlaylistServiceImpl(playlistRepository);
 
-        Playlist playlist=new Playlist("title",new User(),152);
+        Playlist playlist=new Playlist("title",new User(),152,0);
 
         Mockito.when(playlistService.getPlaylistByTitle("title"))
                 .thenReturn(
@@ -51,8 +51,8 @@ public class PlaylistServiceImplTest {
         PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
         PlaylistService playlistService=new PlaylistServiceImpl(playlistRepository);
 
-        Playlist playlist=new Playlist("title",new User(),152);
-        Playlist playlist1=new Playlist("title1",new User(),152);
+        Playlist playlist=new Playlist("title",new User(),152,0);
+        Playlist playlist1=new Playlist("title1",new User(),152,0);
 
 
 
@@ -79,7 +79,7 @@ public class PlaylistServiceImplTest {
         PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
         PlaylistService playlistService=new PlaylistServiceImpl(playlistRepository);
 
-        Playlist playlist=new Playlist("title",new User(),152);
+        Playlist playlist=new Playlist("title",new User(),152,0);
 
         playlistService.save(playlist);
 

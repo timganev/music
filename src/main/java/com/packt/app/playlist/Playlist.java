@@ -41,6 +41,8 @@ public class Playlist {
 
     private String username;
 
+    private int avgrank;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "playlists_genres",
             joinColumns = @JoinColumn(name = "genre_id"),
@@ -65,10 +67,11 @@ public class Playlist {
 
     }
 
-    public Playlist(String title, User userId, double duration) {
+    public Playlist(String title, User userId, double duration,int avgrank) {
         setTitle(title);
         this.userId = userId;
         this.duration = duration;
+        this.avgrank=avgrank;
         this.playlistTracks=new HashSet<>();
         this.playlistGenres=new HashSet<>();
         this.playlistArtists=new HashSet<>();
@@ -171,5 +174,13 @@ public class Playlist {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public double getAvgrank() {
+        return avgrank;
+    }
+
+    public void setAvgrank(int avgrank) {
+        this.avgrank = avgrank;
     }
 }

@@ -45,7 +45,7 @@ public class PlaylistControllerTest {
 
         PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
 
-        Playlist playlist = new Playlist("title", new User(), 152);
+        Playlist playlist = new Playlist("title", new User(), 152,0);
         List<Playlist> allPlaylists = Arrays.asList(playlist);
 
         given(service.getPlaylists()).willReturn(allPlaylists);
