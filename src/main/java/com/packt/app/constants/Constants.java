@@ -14,10 +14,7 @@ public interface Constants{
     String THROW_WHEN_PLAYLIST_HAS_NO_TRACKS_MESSAGE="This playlist has no tracks";
 
     String SAVE_TRACK_TO_DB_MESSAGE ="Track with genre - %s was saved to database";
-    String DOWNLOADED_RB_TRACKS_SAVED_MESSAGE ="Downloaded tracks from external API with genre R&B was saved to database";
-    String DOWNLOADED_DANCE_TRACKS_SAVED_MESSAGE ="Downloaded tracks from external API with genre Dance was saved to database";
-    String DOWNLOADED_ROCK_TRACKS_SAVED_MESSAGE ="Downloaded tracks from external API with genre Rock was saved to database";
-    String DOWNLOADED_POP_TRACKS_SAVED_MESSAGE ="Downloaded tracks from external API with genre Pop was saved to database";
+       String DOWNLOADED_TRACKS_WITH_GENRES_SAVED_MESSAGE="Downloaded tracks from external API with genre %s was saved to database";
 
     String DOWNLOADED_GENRES_SAVED_MESSAGE ="Downloaded genres from external API was saved to database";
     String GET_GENRE_BY_NAME_MESSAGE="Get genre with name %s";

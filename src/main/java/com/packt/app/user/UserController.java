@@ -20,12 +20,6 @@ public class UserController {
         return userService.findAll();
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping(value = "/users/{id}")
-    public User getOne(@PathVariable(value = "id") Long id){
-        return userService.findById(id);
-    }
-
     @PostMapping(value="/signup")
     public User saveUser(@RequestBody UserDto user){
         return userService.save(user);

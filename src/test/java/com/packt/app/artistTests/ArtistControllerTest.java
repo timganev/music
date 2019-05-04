@@ -37,7 +37,7 @@ public class ArtistControllerTest {
 
     @Test
     @WithMockUser(username="admin",roles={"USER","ADMIN"})
-    public void givenAlbums_whenGetAlbums_thenReturnJsonArray()
+    public void givenArtists_whenGetArtists_thenReturnJsonArray()
             throws Exception {
 
         Artist artist=new Artist("name","artist_track_url");

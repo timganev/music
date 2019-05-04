@@ -12,6 +12,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.packt.app.constants.Constants.*;
 
@@ -31,6 +32,7 @@ List<Track> findAllByDurationBetween(Integer min, Integer max);
             nativeQuery = true)
     Track getRandomTrackFromDbByGenre(@Param("id") int id);
 
+      Set<Track> getAllByGenreOrderByRankDesc(Genre genre);
 
 
 

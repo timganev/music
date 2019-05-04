@@ -29,8 +29,9 @@ public class PlaylistRepositoryTest {
     private PlaylistRepository playlistRepository;
 
     @Test
-    public void save_Album() {
+    public void save_Playlist() {
         User user=new User("name","123456","User");
+        entityManager.persistAndFlush(user);
         Playlist playlist=new Playlist("title",user,152);
         entityManager.persistAndFlush(playlist);
 
@@ -39,10 +40,10 @@ public class PlaylistRepositoryTest {
 
 
     @Test
-    public void deleteAlbum() {
-        User user=new User("name","1223456","User");
-        entityManager.persistAndFlush(user);
-        Playlist playlist=new Playlist("title",user,152);
+    public void deletePlaylist() {
+        User userId=new User("name","1223456","User");
+        entityManager.persistAndFlush(userId);
+        Playlist playlist=new Playlist("title",userId,152);
         entityManager.persistAndFlush(playlist);
 
         List<Playlist> emptyList=new ArrayList<>();

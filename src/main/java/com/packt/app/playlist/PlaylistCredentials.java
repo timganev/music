@@ -9,6 +9,15 @@ public class PlaylistCredentials {
     private double duration;
 
 
+
+    public PlaylistCredentials(String genre, double duration) {
+        this.genre = genre;
+        this.duration = duration;
+    }
+    public PlaylistCredentials() {
+
+    }
+
     public String getGenre() {
         return genre;
     }

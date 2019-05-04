@@ -2,7 +2,9 @@ package com.packt.app.GeneratePlaylist;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +23,22 @@ public class GeneratePlaylistController {
 
     @PostMapping("generateone")
     public void generateByOneGenre(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        generatePlaylistService.generatePlaylistByOneGenre(req,res);
+        generatePlaylistService.saveGeneratedPlaylistByOneGenre(req, res);
     }
 
     @PostMapping("generatemore")
-    public void generateByMoreGenres(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        generatePlaylistService.generatePlaylistByMoreGenres(req,res);
+    public void generateByMoreGenre(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        generatePlaylistService.saveGeneratedPlaylistByMoreGenre(req, res);
     }
+
+    @PostMapping("generate")
+    public void generatePlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        generatePlaylistService.saveGeneratedPlaylist(req, res);
+    }
+
+
+
+
+
 
 }

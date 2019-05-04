@@ -22,7 +22,7 @@ import java.util.List;
 public class ArtistServiceImplTest {
 
     @Test
-    public void getAlbums_Should_Return_All_Existing_Albums() {
+    public void getArtist_Should_Return_All_Existing_Artist() {
 
         ArtistRepository artistRepository = Mockito.mock(ArtistRepository.class);
         ArtistService artistService=new ArtistServiceImpl(artistRepository);
@@ -49,7 +49,7 @@ public class ArtistServiceImplTest {
     }
 
     @Test
-    public void saveAlbum_Should_Call_AlbumRepository_Save(){
+    public void saveArtist_Should_Call_ArtistRepository_Save(){
         ArtistRepository artistRepository = Mockito.mock(ArtistRepository.class);
         ArtistService artistService=new ArtistServiceImpl(artistRepository);
 

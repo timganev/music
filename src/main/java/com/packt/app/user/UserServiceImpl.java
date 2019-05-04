@@ -17,11 +17,15 @@ import java.util.Set;
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
 
-	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bcryptEncoder;
+
+	@Autowired
+	public UserServiceImpl(UserRepository userRepository) {
+		this.userRepository=userRepository;
+	}
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
@@ -57,10 +61,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		return userRepository.findByUsername(username);
 	}
 
-	@Override
-	public User findById(Long id) {
-		return userRepository.findById(id).get();
-	}
 
 	@Override
 	public User save(UserDto user) {

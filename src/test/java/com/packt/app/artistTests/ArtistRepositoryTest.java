@@ -29,7 +29,7 @@ public class ArtistRepositoryTest {
     private ArtistRepository artistRepository;
 
     @Test
-    public void save_Album() {
+    public void save_Artist() {
         Artist artist=new Artist("name","artist_track_url");
         entityManager.persistAndFlush(artist);
 
@@ -37,7 +37,7 @@ public class ArtistRepositoryTest {
     }
 
     @Test
-    public void deleteAlbum() {
+    public void deleteArtist() {
         Artist artist=new Artist("name","artist_track_url");
         entityManager.persistAndFlush(artist);
 
