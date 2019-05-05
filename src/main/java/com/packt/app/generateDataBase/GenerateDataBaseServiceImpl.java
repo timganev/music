@@ -1,4 +1,4 @@
-package com.packt.app.GenerateDataBase;
+package com.packt.app.generateDataBase;
 
 import com.packt.app.Application;
 import com.packt.app.responseErrorHandler.RestTemplateResponseErrorHandler;
@@ -76,9 +76,7 @@ public class GenerateDataBaseServiceImpl implements GenerateDataBaseService{
     }
 
     public Genre getGenre(String genreType) {
-        Genre genre = new Genre();
-        genre=genreService.findByName(genreType);
-        return genre;
+        return genreService.findByName(genreType);
     }
 
 

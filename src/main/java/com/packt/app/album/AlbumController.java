@@ -1,16 +1,12 @@
 package com.packt.app.album;
 
-
-import com.packt.app.genre.Genre;
-import com.packt.app.genre.GenreList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class AlbumController {
@@ -24,8 +20,13 @@ public class AlbumController {
 	}
 
 	@GetMapping("/albums")
-	public Iterable<Album> getAlbums() {
-		return albumService.getAlbums();
+	public ResponseEntity<Iterable<Album>> getAlbums() {
+		if (albumService.getAlbums().isEmpty()){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					"Albums not found");
+		}
+		return new  ResponseEntity<>(albumService.getAlbums(), HttpStatus.OK);
 	}
+
 
 }

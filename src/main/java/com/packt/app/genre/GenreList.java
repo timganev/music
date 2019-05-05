@@ -3,8 +3,6 @@ package com.packt.app.genre;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.packt.app.genre.Genre;
-
 import java.util.ArrayList;
 import java.util.List;
 

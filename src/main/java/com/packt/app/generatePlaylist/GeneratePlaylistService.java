@@ -1,4 +1,4 @@
-package com.packt.app.GeneratePlaylist;
+package com.packt.app.generatePlaylist;
 
 import com.packt.app.playlist.Playlist;
 import com.packt.app.playlist.PlaylistCredentials;
@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 public interface GeneratePlaylistService {
 

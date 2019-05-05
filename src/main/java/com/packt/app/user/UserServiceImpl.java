@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username);
+		User user = userRepository.findFirstByUsername(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public User findOne(String username) {
-		return userRepository.findByUsername(username);
+		return userRepository.findFirstByUsername(username);
 	}
 
 
@@ -71,26 +71,4 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		return userRepository.save(newUser);
 	}
 
-//	@EventListener(ApplicationReadyEvent.class)
-//	public void doSomethingAfterStartup() {
-//		User newUser = new User();
-//		newUser.setUsername("admin");
-//		newUser.setPassword(bcryptEncoder.encode("admin"));
-//		Role role = new Role();
-//		role.setName("ADMIN");
-//		Set<Role> roles = new HashSet<>();
-//		roles.add(role);
-//		newUser.setRoles(roles);
-//		userRepository.save(newUser);
-//
-//		User newUser2 = new User();
-//		newUser2.setUsername("user");
-//		newUser2.setPassword(bcryptEncoder.encode("user"));
-//		Role role2 = new Role();
-//		role2.setName("USER");
-//		Set<Role> roles2 = new HashSet<>();
-//		roles2.add(role2);
-//		newUser2.setRoles(roles2);
-//		userRepository.save(newUser2);
-//	}
 }

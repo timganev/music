@@ -8,7 +8,6 @@ import com.packt.app.artist.Artist;
 import com.packt.app.genre.Genre;
 import com.packt.app.track.Track;
 import com.packt.app.user.User;
-import com.packt.app.userDetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.Valid;

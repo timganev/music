@@ -1,7 +1,5 @@
 package com.packt.app.track;
 
-import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 
 public interface TrackService {

@@ -1,4 +1,4 @@
-package com.packt.app.GenerateDataBase;
+package com.packt.app.generateDataBase;
 
 import com.packt.app.Application;
 import com.packt.app.genre.Genre;
@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-
-import static com.packt.app.constants.Constants.*;
 
 @RestController
 public class GenerateDataBaseController {
@@ -32,8 +30,6 @@ public class GenerateDataBaseController {
         List<Track> tracks = generateDataBaseService.getAllTracksByGenre(genre);
         Genre genre1 = generateDataBaseService.getGenre(genre);
         generateDataBaseService.saveData(tracks, genre1);
-        String st=String.format(DOWNLOADED_TRACKS_WITH_GENRES_SAVED_MESSAGE,genre);
-        logger.warn(st);
     }
 
 

@@ -60,18 +60,18 @@ public class PlaylistServiceImpl implements PlaylistService {
     public Playlist getPlaylistByTitle(String title){
         String message=String.format(GET_PLAYLIST_MESSAGE, title);
         logger.info(message);
-       return playlistRepository.findByTitle(title);
+       return playlistRepository.findFirstByTitle(title);
     }
 
     @Override
     public Set<Track> getPlaylistTracks(String title){
-        if (playlistRepository.findByTitle(title).getPlaylistTracks().isEmpty()){
+        if (playlistRepository.findFirstByTitle(title).getPlaylistTracks().isEmpty()){
             logger.error(THROW_WHEN_PLAYLIST_HAS_NO_TRACKS_MESSAGE);
             throw new NullPointerException("This playlist has no tracks");
         }
         String message=String.format(GET_PLAYLIST_TRACKS_MESSAGE, title);
         logger.info(message);
-       return playlistRepository.findByTitle(title).getPlaylistTracks();
+       return playlistRepository.findFirstByTitle(title).getPlaylistTracks();
     }
 
 
