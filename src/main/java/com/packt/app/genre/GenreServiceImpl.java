@@ -7,10 +7,12 @@ import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.packt.app.constants.Constants.DOWNLOADED_GENRES_SAVED_MESSAGE;
 import static com.packt.app.constants.Constants.GET_GENRE_BY_NAME_MESSAGE;
+import static com.packt.app.constants.Constants.THIS_GENRE_ALREADY_EXIST;
 
 @Service
 public class GenreServiceImpl implements GenreService {
@@ -39,12 +41,17 @@ public class GenreServiceImpl implements GenreService {
         List<Genre> genres = downloadGenresFromAPI();
 
         List<Genre> existingGenres= (List<Genre>) genreRepository.findAll();
+        List<String> names=new ArrayList<>();
+        for (Genre existingGenre : existingGenres) {
+            names.add(existingGenre.getName());
+        }
 
         for (Genre genre : genres) {
-            if (!existingGenres.contains(genre)){
+            if (!names.contains(genre.getName())){
                 genreRepository.save(genre);
             }else {
-                throw new IllegalArgumentException("This genre already exist");
+                String message=String.format(THIS_GENRE_ALREADY_EXIST,genre.getName());
+                logger.error(message);
             }
         }
 

@@ -19,6 +19,7 @@ public interface Constants{
 
     String DOWNLOADED_GENRES_SAVED_MESSAGE ="Downloaded genres from external API was saved to database";
     String GET_GENRE_BY_NAME_MESSAGE="Get genre with name %s";
+    String THIS_GENRE_ALREADY_EXIST="Genre with %s already exist";
 
 
 }
