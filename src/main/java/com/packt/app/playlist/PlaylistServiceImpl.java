@@ -74,11 +74,6 @@ public class PlaylistServiceImpl implements PlaylistService {
        return playlistRepository.findByTitle(title).getPlaylistTracks();
     }
 
-    @Override
-    public List<Playlist> findByUserId_Username(String username) {
-
-        return playlistRepository.findByUserId_Username(username);
-    }
 
 
 }

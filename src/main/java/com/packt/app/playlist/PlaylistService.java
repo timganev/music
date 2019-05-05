@@ -13,7 +13,7 @@ public interface PlaylistService {
     void save(Playlist playlist);
     Playlist getPlaylistByTitle(String title);
     Set<Track> getPlaylistTracks(String title);
-    List<Playlist> findByUserId_Username(String username);
+
 
 //    PlaylistCredentialsList generate(HttpServletRequest req, HttpServletResponse res);
 

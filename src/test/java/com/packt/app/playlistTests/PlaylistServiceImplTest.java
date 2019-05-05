@@ -89,7 +89,7 @@ public class PlaylistServiceImplTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void getPlaylistsTracks_Should_Return_All_Existing_Playlist_Tracks() {
+    public void getPlaylistsTracks_Throw_When_Have_No_Tracks() {
 
         PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
         PlaylistService playlistService=new PlaylistServiceImpl(playlistRepository);

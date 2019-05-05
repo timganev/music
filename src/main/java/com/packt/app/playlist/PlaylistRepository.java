@@ -12,7 +12,6 @@ import java.util.List;
 public interface PlaylistRepository extends CrudRepository<Playlist, Integer> {
 
      Playlist findByTitle(String title);
-     List<Playlist> findByUserId_Username(String username);
 
 
 }

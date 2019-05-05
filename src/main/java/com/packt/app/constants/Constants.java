@@ -15,6 +15,7 @@ public interface Constants{
 
     String SAVE_TRACK_TO_DB_MESSAGE ="Track with genre - %s was saved to database";
        String DOWNLOADED_TRACKS_WITH_GENRES_SAVED_MESSAGE="Downloaded tracks from external API with genre %s was saved to database";
+       String NO_TRACKS_WITH_THIS_DURATION_AND_GENRE="No tracks matched in genre %s with duration %s";
 
     String DOWNLOADED_GENRES_SAVED_MESSAGE ="Downloaded genres from external API was saved to database";
     String GET_GENRE_BY_NAME_MESSAGE="Get genre with name %s";

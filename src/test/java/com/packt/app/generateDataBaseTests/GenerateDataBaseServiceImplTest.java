@@ -1,20 +1,12 @@
-package com.packt.app.generateDataBase;
+package com.packt.app.generateDataBaseTests;
 
 import com.packt.app.GenerateDataBase.GenerateDataBaseService;
-import com.packt.app.artist.Artist;
-import com.packt.app.artist.ArtistRepository;
-import com.packt.app.artist.ArtistService;
-import com.packt.app.artist.ArtistServiceImpl;
 import com.packt.app.genre.Genre;
-import com.packt.app.track.Track;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 public class GenerateDataBaseServiceImplTest {

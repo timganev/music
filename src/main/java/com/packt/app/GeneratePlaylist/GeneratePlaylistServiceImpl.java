@@ -129,6 +129,8 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
 
         playlist.setUsername(userName);
+        playlist.setImage_url("https://vignette.wikia.nocookie.net/uncyclopedia/images/5/56/Music-notes.jpg/revision/latest?cb=20080914120706");
+
         return playlist;
 
     }
@@ -163,8 +165,8 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                     countOfRandomReturns, pl, genre,isSameArtistAllow,isTopRankAllow);
 
             if (currentDuration == 0) {
-                String message = String.format("No tracks matched in genre %s with duration", pl.getGenre(), pl.getDuration());
-                logger.debug(message);
+                String message = String.format(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE, pl.getGenre(), pl.getDuration());
+                logger.error(message);
                 currentCredential++;
                 continue;
             }
@@ -175,6 +177,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         }
 
         playlist.setUsername(userName);
+        playlist.setImage_url("https://vignette.wikia.nocookie.net/uncyclopedia/images/5/56/Music-notes.jpg/revision/latest?cb=20080914120706");
         return playlist;
 
 //            System.out.println(playlist.getPlaylistGenres());
@@ -193,7 +196,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         if (isTopRankAllow){
              tracks=getTracksByGenreOrderedByRankDesc(genre);
         }
-        while (currentDuration < pl.getDuration() + 120) {
+        while (currentDuration < pl.getDuration() + 60) {
 
             if (countOfRandomReturns > 10) {
                 break;
@@ -206,7 +209,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 } else {
                     track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
                 }
-                if (track.getDuration() > pl.getDuration() + 120) {
+                if (track.getDuration() > pl.getDuration() + 60) {
                    break;
                 }
             }else {
@@ -237,8 +240,9 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
         }
         if (playlist.getPlaylistTracks().isEmpty()) {
-            logger.error("Have not tracks to get in playlist with this duration and genres");
-            throw new NullPointerException("Have not tracks to get in playlist with this duration and genres");
+            String message = String.format(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE, pl.getGenre(), pl.getDuration());
+            logger.error(message);
+            throw new NullPointerException(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE);
         }
         averageRank=currentRank/playlist.getPlaylistTracks().size();
         playlist.setAvgrank(averageRank);
@@ -263,8 +267,8 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
         track = trackRepository.getRandomTrackFromDB();
 
-        while (currentDuration < pl.getDuration() + 120) {
-            if (track.getDuration() > pl.getDuration() + 120) {
+        while (currentDuration < pl.getDuration() + 60) {
+            if (track.getDuration() > pl.getDuration() + 60) {
                 break;
             }
 
@@ -304,12 +308,13 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         if (playlistRepository.findByTitle(title) != null) {
             String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
             logger.error(message);
-            throw new IllegalArgumentException("Playlist with this title already exist");
+            throw new IllegalArgumentException(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE);
         }
 
         if (playlist.getPlaylistTracks().isEmpty()) {
-            logger.error("Have not tracks to get in playlist with this duration and genres");
-            throw new NullPointerException("Have not tracks to get in playlist with this duration");
+            String message = String.format(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE, pl.getGenre(), pl.getDuration());
+            logger.error(message);
+            throw new NullPointerException(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE);
         }
 
         averageRank=currentRank/playlist.getPlaylistTracks().size();
@@ -317,6 +322,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         durationToSet += currentDuration;
         playlist.setDuration(durationToSet);
         playlist.setUsername(userName);
+        playlist.setImage_url("https://vignette.wikia.nocookie.net/uncyclopedia/images/5/56/Music-notes.jpg/revision/latest?cb=20080914120706");
         return playlist;
 
     }

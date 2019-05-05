@@ -13,7 +13,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, unique = true)
     @Size(min = 2,max = 20,message = "Username must be between 2 and 20 symbols")
@@ -41,12 +41,11 @@ public class User {
     }
 
 
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
