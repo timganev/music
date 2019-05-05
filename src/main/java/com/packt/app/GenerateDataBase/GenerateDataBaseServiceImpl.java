@@ -1,7 +1,7 @@
 package com.packt.app.GenerateDataBase;
 
 import com.packt.app.Application;
-import com.packt.app.ResponseErrorHandler.RestTemplateResponseErrorHandler;
+import com.packt.app.responseErrorHandler.RestTemplateResponseErrorHandler;
 import com.packt.app.album.AlbumService;
 import com.packt.app.artist.ArtistService;
 import com.packt.app.genre.Genre;

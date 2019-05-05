@@ -1,8 +1,7 @@
-package com.packt.app.ResponseErrorHandler;
+package com.packt.app.responseErrorHandler;
 
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;

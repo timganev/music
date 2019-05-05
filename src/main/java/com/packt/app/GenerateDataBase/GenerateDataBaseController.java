@@ -1,26 +1,15 @@
 package com.packt.app.GenerateDataBase;
 
 import com.packt.app.Application;
-import com.packt.app.ResponseErrorHandler.RestTemplateResponseErrorHandler;
-import com.packt.app.album.AlbumService;
-import com.packt.app.artist.ArtistService;
 import com.packt.app.genre.Genre;
-import com.packt.app.genre.GenreService;
-import com.packt.app.playlist.PlaylistDTO;
-import com.packt.app.playlist.PlaylistList;
 import com.packt.app.track.Track;
-import com.packt.app.track.TrackList;
-import com.packt.app.track.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.packt.app.constants.Constants.*;
