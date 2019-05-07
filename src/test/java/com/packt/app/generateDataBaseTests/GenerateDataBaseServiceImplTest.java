@@ -1,6 +1,6 @@
 package com.packt.app.generateDataBaseTests;
 
-import com.packt.app.GenerateDataBase.GenerateDataBaseService;
+import com.packt.app.generateDataBase.GenerateDataBaseService;
 import com.packt.app.genre.Genre;
 import org.junit.Assert;
 import org.junit.Test;

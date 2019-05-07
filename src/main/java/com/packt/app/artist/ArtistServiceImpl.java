@@ -2,7 +2,8 @@ package com.packt.app.artist;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Service
 public class ArtistServiceImpl implements ArtistService {
@@ -14,8 +15,8 @@ public class ArtistServiceImpl implements ArtistService {
         this.artistRepository = artistRepository;
     }
 
-    public Iterable<Artist> getArtists(){
-        return artistRepository.findAll();
+    public List<Artist> getArtists(){
+        return (List<Artist>) artistRepository.findAll();
     }
     public void saveArtist(Artist artist){
         artistRepository.save(artist);

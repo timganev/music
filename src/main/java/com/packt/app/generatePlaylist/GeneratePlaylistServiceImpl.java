@@ -1,4 +1,4 @@
-package com.packt.app.GeneratePlaylist;
+package com.packt.app.generatePlaylist;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -104,15 +104,14 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                                                boolean isTopRankAllow) {
 
         double currentDuration = 0;
-        User user = userRepository.findByUsername(userName);
+        User user = userRepository.findFirstByUsername(userName);
         Playlist playlist = new Playlist(title, user, 0,0);
-        Track track = new Track();
 
         int countOfRandomReturns = 0;
         PlaylistCredentials pl = playlistCredentials.get(0);
         String genre = pl.getGenre();
 
-        if (playlistRepository.findByTitle(title) != null) {
+        if (playlistRepository.findFirstByTitle(title) != null) {
             String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
             logger.error(message);
             throw new IllegalArgumentException("Playlist with this title already exist");
@@ -141,16 +140,15 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                                                  boolean isTopRankAllow){
 
         double currentDuration = 0;
-        User user = userRepository.findByUsername(userName);
+        User user = userRepository.findFirstByUsername(userName);
 
         Playlist playlist = new Playlist(title, user, 0,0);
-        Track track = new Track();
 
         int currentCredential = 0;
         int countOfRandomReturns = 0;
         int durationToSet = 0;
 
-        if (playlistRepository.findByTitle(title) != null) {
+        if (playlistRepository.findFirstByTitle(title) != null) {
             String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
             logger.error(message);
             throw new IllegalArgumentException("Playlist with this title already exist");
@@ -180,7 +178,6 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         playlist.setImage_url("https://vignette.wikia.nocookie.net/uncyclopedia/images/5/56/Music-notes.jpg/revision/latest?cb=20080914120706");
         return playlist;
 
-//            System.out.println(playlist.getPlaylistGenres());
 
     }
 
@@ -260,7 +257,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         int averageRank=0;
         int currentRank=0;
 
-        User user = userRepository.findByUsername(userName);
+        User user = userRepository.findFirstByUsername(userName);
 
         Playlist playlist = new Playlist(title, user, 0,0);
         Track track = new Track();
@@ -305,7 +302,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         }
 
 
-        if (playlistRepository.findByTitle(title) != null) {
+        if (playlistRepository.findFirstByTitle(title) != null) {
             String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
             logger.error(message);
             throw new IllegalArgumentException(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE);

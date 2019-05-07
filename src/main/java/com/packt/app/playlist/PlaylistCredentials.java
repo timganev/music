@@ -1,8 +1,5 @@
 package com.packt.app.playlist;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-//@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlaylistCredentials {
 
     private String genre;

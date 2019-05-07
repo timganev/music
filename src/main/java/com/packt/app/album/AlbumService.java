@@ -1,6 +1,8 @@
 package com.packt.app.album;
 
+import java.util.List;
+
 public interface AlbumService {
-    Iterable<Album> getAlbums();
+    List<Album> getAlbums();
     void saveAlbums(Album album);
 }

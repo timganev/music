@@ -1,18 +1,15 @@
 package com.packt.app.playlist;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.packt.app.track.Track;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Set;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class PlaylistController {
@@ -26,23 +23,32 @@ public class PlaylistController {
 
 
     @GetMapping("/allpalylists")
-    public Iterable<Playlist> getPlaylists(){
-        return playlistService.getPlaylists();
+    public ResponseEntity<Iterable<Playlist>> getPlaylists() {
+        if (playlistService.getPlaylists().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Playlists not found");
+        }
+        return new ResponseEntity<>(playlistService.getPlaylists(), HttpStatus.OK);
     }
 
 
     @GetMapping("getplaylist")
- public Playlist getPlaylistByTitle(@RequestParam String title) {
-       return playlistService.getPlaylistByTitle(title);
+    public ResponseEntity<Playlist> getPlaylistByTitle(@RequestParam String title) {
+        if (playlistService.getPlaylistByTitle(title)==null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Playlist not found");
+        }
+        return new ResponseEntity<>(playlistService.getPlaylistByTitle(title), HttpStatus.OK);
     }
 
     @GetMapping("playlisttracks")
- public Set<Track> getPlaylistTracks(@RequestParam String title) {
-       return playlistService.getPlaylistTracks(title);
+    public ResponseEntity<Set<Track>> getPlaylistTracks(@RequestParam String title) {
+        if (playlistService.getPlaylistTracks(title).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "No tracks found");
+        }
+        return new ResponseEntity<>( playlistService.getPlaylistTracks(title), HttpStatus.OK);
     }
-
-
-
 
 
 }

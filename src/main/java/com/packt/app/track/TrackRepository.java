@@ -1,25 +1,20 @@
 package com.packt.app.track;
 
-
-
-
 import com.packt.app.genre.Genre;
-import org.apache.tomcat.util.bcel.classfile.Constant;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.util.List;
-import java.util.Set;
 
 import static com.packt.app.constants.Constants.*;
 
 @RepositoryRestResource
 public interface TrackRepository extends CrudRepository<Track, Integer> {
 
-//    List<Beer> findByAbvBetweenOrderByAbvDesc(Integer min, Integer max);
+
 List<Track> findAllByGenreAndDurationBetween(Integer genre, Integer min, Integer max);
 List<Track> findAllByGenre_Id(Integer genre);
 List<Track> findAllByDurationBetween(Integer min, Integer max);

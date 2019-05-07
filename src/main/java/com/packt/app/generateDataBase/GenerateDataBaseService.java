@@ -1,4 +1,4 @@
-package com.packt.app.GenerateDataBase;
+package com.packt.app.generateDataBase;
 
 import com.packt.app.genre.Genre;
 import com.packt.app.track.Track;
