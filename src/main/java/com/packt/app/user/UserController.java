@@ -2,6 +2,8 @@ package com.packt.app.user;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +13,7 @@ import java.util.Optional;
 @RestController
 public class UserController {
 
-    @Autowired
+    @Autowired //constr
     private UserService userService;
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -21,8 +23,11 @@ public class UserController {
     }
 
     @PostMapping(value="/signup")
-    public User saveUser(@RequestBody UserDto user){
-        return userService.save(user);
+    public ResponseEntity<User> saveUser(@RequestBody UserDto user){
+        if (userService.findOne(user.getUsername())!=null) {
+           return new ResponseEntity<>(new User(), HttpStatus.IM_USED);
+        }
+       return new  ResponseEntity<>(userService.save(user), HttpStatus.OK);
     }
 
 
