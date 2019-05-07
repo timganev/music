@@ -189,7 +189,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         int indexToIter=0;
         int averageRank=0;
         int currentRank=0;
-
+        List<String> title=new ArrayList<>();
         if (isTopRankAllow){
              tracks=getTracksByGenreOrderedByRankDesc(genre);
         }
@@ -214,6 +214,21 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 indexToIter++;
             }
         countOfRandomReturns=0;
+
+
+
+            if (title.contains(track.getTitle())) {
+                while (title.contains(track.getTitle())) {
+                    track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
+                    countOfRandomReturns++;
+                    if (countOfRandomReturns > 5) {
+                        break;
+                    }
+                }
+            }else {
+                title.add(track.getTitle());
+            }
+
             if (playlist.getPlaylistTracks() != null && playlist.getPlaylistTracks().contains(track)) {
                 while (playlist.getPlaylistTracks().contains(track)) {
                     track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
