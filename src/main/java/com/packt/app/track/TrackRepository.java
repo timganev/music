@@ -12,7 +12,7 @@ import java.util.List;
 import static com.packt.app.constants.Constants.*;
 
 @RepositoryRestResource
-public interface TrackRepository extends CrudRepository<Track, Integer> {
+public interface TrackRepository extends CrudRepository<Track, Long> {
 
 
 List<Track> findAllByGenreAndDurationBetween(Integer genre, Integer min, Integer max);

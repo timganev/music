@@ -81,6 +81,9 @@ public class GenerateDataBaseServiceImpl implements GenerateDataBaseService{
 
 
     public void saveData(List<Track> tracks, Genre genre) {
+
+       genreService.saveGenres();
+
         for (Track track : tracks) {
             artistService.saveArtist(track.getArtist());
             track.getAlbum().setArtist(track.getArtist());

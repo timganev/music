@@ -17,7 +17,7 @@ public class Track {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String title;
     private String link;
     private int duration;
@@ -58,11 +58,11 @@ public class Track {
         this.artist = artist;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

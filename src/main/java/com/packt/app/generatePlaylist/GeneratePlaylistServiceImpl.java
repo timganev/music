@@ -193,7 +193,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         if (isTopRankAllow){
              tracks=getTracksByGenreOrderedByRankDesc(genre);
         }
-        while (currentDuration < pl.getDuration() + 60) {
+        while (currentDuration < pl.getDuration() + 80) {
 
             if (countOfRandomReturns > 10) {
                 break;
@@ -206,7 +206,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 } else {
                     track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
                 }
-                if (track.getDuration() > pl.getDuration() + 60) {
+                if (track.getDuration() > pl.getDuration() + 80) {
                    break;
                 }
             }else {
@@ -264,8 +264,8 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
         track = trackRepository.getRandomTrackFromDB();
 
-        while (currentDuration < pl.getDuration() + 60) {
-            if (track.getDuration() > pl.getDuration() + 60) {
+        while (currentDuration < pl.getDuration() + 80) {
+            if (track.getDuration() > pl.getDuration() + 80) {
                 break;
             }
 

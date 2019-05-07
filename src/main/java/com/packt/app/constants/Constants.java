@@ -21,4 +21,7 @@ public interface Constants {
     String THIS_GENRE_ALREADY_EXIST = "Genre with %s already exist";
 
 
+    String  USERNAME_WITH_THIS_USERNAME_EXIST= "User with username %s already exist";
+
+
 }
