@@ -116,6 +116,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         double durationToSet = 0;
         List<Track> allNeededtracks = new ArrayList<>();
         int avgRank = 0;
+        double currentDuration = 0;
         List<Track> tracksToAdd = new ArrayList<>();
 
 
@@ -132,16 +133,18 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 allNeededtracks = getAllByGenreGroupByArtist(genre1.getId());
             }
 
-            while (playlistCredentials.get(i).getDuration() > durationToSet) {
+            while (playlistCredentials.get(i).getDuration() > currentDuration-20) {
                 Random rand = new Random();
                 Track randomTrack = allNeededtracks.get(rand.nextInt(allNeededtracks.size()));
 
                tracksToAdd.add(randomTrack);
                 avgRank += randomTrack.getRank();
-                durationToSet += randomTrack.getDuration();
+                currentDuration+=randomTrack.getDuration();
                 allNeededtracks.remove(randomTrack);
             }
             i++;
+            durationToSet+=currentDuration;
+            currentDuration=0;
         }
          avgRank = avgRank / tracksToAdd.size();
         savePlaylist(avgRank, durationToSet, playlist);
@@ -156,6 +159,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         double durationToSet = 0;
         List<Track> allNeededtracks = new ArrayList<>();
         int avgRank = 0;
+        double currentDuration=0;
         List<Track> tracksToAdd = new ArrayList<>();
 
         User user = userRepository.findFirstByUsername(userName);
@@ -171,15 +175,17 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                     Genre genre1 = genreRepository.findByName(genre);
                     allNeededtracks = getTracksByGenreGroupByTitle(genre1.getId());
                 }
-                while (playlistCredentials.get(i).getDuration() > durationToSet) {
+                while (playlistCredentials.get(i).getDuration() > currentDuration-20) {
                     Random rand = new Random();
                     Track randomTrack = allNeededtracks.get(rand.nextInt(allNeededtracks.size()));
 
                     tracksToAdd.add(randomTrack);
                     avgRank += randomTrack.getRank();
-                    durationToSet += randomTrack.getDuration();
+                    currentDuration+=randomTrack.getDuration();
                 }
                 i++;
+                durationToSet+=currentDuration;
+                currentDuration=0;
             }
             avgRank = avgRank / tracksToAdd.size();
             savePlaylist(avgRank, durationToSet, playlist);
@@ -199,15 +205,17 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
                 }
 
-                while (playlistCredentials.get(i).getDuration() > durationToSet) {
+                while (playlistCredentials.get(i).getDuration() > currentDuration-20) {
                     Track randomTrack = allNeededtracks.get(0);
 
                     tracksToAdd.add(randomTrack);
                     avgRank += randomTrack.getRank();
-                    durationToSet += randomTrack.getDuration();
+                    currentDuration+=randomTrack.getDuration();
                     allNeededtracks.remove(randomTrack);
                 }
                 i++;
+                durationToSet+=currentDuration;
+                currentDuration=0;
             }
             avgRank = avgRank / tracksToAdd.size();
             savePlaylist(avgRank, durationToSet, playlist);
@@ -228,16 +236,18 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
                 }
 
-                while (playlistCredentials.get(i).getDuration() > durationToSet) {
+                while (playlistCredentials.get(i).getDuration() > currentDuration-20) {
                     Random rand = new Random();
                     Track randomTrack = allNeededtracks.get(rand.nextInt(allNeededtracks.size()));
 
 
                     tracksToAdd.add(randomTrack);
                     avgRank += randomTrack.getRank();
-                    durationToSet += randomTrack.getDuration();
+                    currentDuration+=randomTrack.getDuration();
                 }
                 i++;
+                durationToSet+=currentDuration;
+                currentDuration=0;
             }
 
             avgRank = avgRank / tracksToAdd.size();
@@ -247,11 +257,6 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         }
     }
 
-
-//    public List<Track> sortList(List<Track> trackList) {
-//        trackList.sort(new ComparatorClass());
-//        return trackList;
-//    }
 
 
     public PlaylistCredentialsList generate(HttpServletRequest req, HttpServletResponse res) throws IOException {
