@@ -14,7 +14,11 @@ import com.packt.app.track.TrackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,7 +53,7 @@ public class GenerateDataBaseServiceImpl implements GenerateDataBaseService{
 
     }
 
-    public List<String> getPlaylistTracks(Genre genre) throws NullPointerException {
+    public List<String> getPlaylistTracks(Genre genre) throws NullPointerException{
 
         String url = "https://api.deezer.com/search/playlist?q=" + genre.getName().toLowerCase() + "&index=0&limit=70%22";
         PlaylistList response = restTemplate.getForObject(url, PlaylistList.class);

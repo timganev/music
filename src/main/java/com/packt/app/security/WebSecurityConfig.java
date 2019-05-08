@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"" +
 						"" +
 						"" +
-						"up","/about","/log").permitAll()
+						"up","allpalylists","/log").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // Filter for the api/login requests

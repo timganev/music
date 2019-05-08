@@ -10,6 +10,7 @@ public interface Constants {
     String GET_ALL_PLAYLISTS_MESSAGE = "Get all playlists from database ";
     String THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE = "Can not save playlist with title %s! Playlist with this title already exist";
     String THROW_WHEN_PLAYLIST_HAS_NO_TRACKS_MESSAGE = "This playlist has no tracks";
+    String THROW_WHEN_PLAYLIST_NOT_MATCHED_TRACKS_MESSAGE = "No matched tracks for playlist with this criteria";
 
     String SAVE_TRACK_TO_DB_MESSAGE = "Track with genre - %s was saved to database";
 
