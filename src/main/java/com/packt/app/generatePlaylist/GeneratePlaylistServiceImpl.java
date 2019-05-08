@@ -3,7 +3,7 @@ package com.packt.app.generatePlaylist;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.packt.app.Application;
-import com.packt.app.artist.Artist;
+
 import com.packt.app.genre.Genre;
 import com.packt.app.genre.GenreRepository;
 import com.packt.app.playlist.*;
@@ -11,14 +11,12 @@ import com.packt.app.track.Track;
 import com.packt.app.track.TrackRepository;
 import com.packt.app.user.User;
 import com.packt.app.user.UserRepository;
-import org.hibernate.query.Query;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -60,6 +58,12 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
     public void generatePlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
         PlaylistCredentialsList playlistCredentialsList = generate(req, res);
         String title = playlistCredentialsList.getTitle();
+        if (playlistRepository.findFirstByTitle(title)!=null){
+            String message=String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE,title);
+            logger.info(message);
+            throw new IllegalArgumentException(message);
+        }
+
         String userName = playlistCredentialsList.getUsername();
         boolean isSameArtistAllow = playlistCredentialsList.isSameartist();
         boolean isTopRankAllow = playlistCredentialsList.isTopranks();
@@ -77,6 +81,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
 
     public List<Track> getTracksByGenreGroupByTitle(int genreid) {
         return trackRepository.findAllByGenreGroupByTitle(genreid);
+
 
     }
 
@@ -117,7 +122,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         List<Track> allNeededtracks = new ArrayList<>();
         int avgRank = 0;
         double currentDuration = 0;
-        List<Track> tracksToAdd = new ArrayList<>();
+        Set<Track> tracksToAdd = new HashSet<>();
 
 
         User user = userRepository.findFirstByUsername(userName);
@@ -146,10 +151,10 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             durationToSet+=currentDuration;
             currentDuration=0;
         }
+        Set<Track>playlistTracks=playlist.getPlaylistTracks();
+        playlistTracks=tracksToAdd;
          avgRank = avgRank / tracksToAdd.size();
         savePlaylist(avgRank, durationToSet, playlist);
-        Playlist playlist1 = playlistRepository.findFirstByTitle(playlist.getTitle());
-        save(tracksToAdd, playlist1);
 
     }
 
@@ -160,7 +165,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         List<Track> allNeededtracks = new ArrayList<>();
         int avgRank = 0;
         double currentDuration=0;
-        List<Track> tracksToAdd = new ArrayList<>();
+        Set<Track> tracksToAdd = new HashSet<>();
 
         User user = userRepository.findFirstByUsername(userName);
         Playlist playlist = new Playlist(title, user, durationToSet, avgRank);
@@ -187,10 +192,10 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 durationToSet+=currentDuration;
                 currentDuration=0;
             }
+            Set<Track>playlistTracks=playlist.getPlaylistTracks();
+            playlistTracks=tracksToAdd;
             avgRank = avgRank / tracksToAdd.size();
             savePlaylist(avgRank, durationToSet, playlist);
-            Playlist playlist1 = playlistRepository.findFirstByTitle(playlist.getTitle());
-            save(tracksToAdd, playlist1);
 
         } else if (isTopRankAllow) {
             while (i < playlistCredentialsSize) {
@@ -217,10 +222,10 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 durationToSet+=currentDuration;
                 currentDuration=0;
             }
+            Set<Track>playlistTracks=playlist.getPlaylistTracks();
+            playlistTracks=tracksToAdd;
             avgRank = avgRank / tracksToAdd.size();
             savePlaylist(avgRank, durationToSet, playlist);
-            Playlist playlist1 = playlistRepository.findFirstByTitle(playlist.getTitle());
-            save(tracksToAdd, playlist1);
 
         } else {
             while (i < playlistCredentialsSize) {
@@ -249,15 +254,13 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 durationToSet+=currentDuration;
                 currentDuration=0;
             }
-
+            Set<Track>playlistTracks=playlist.getPlaylistTracks();
+            playlistTracks=tracksToAdd;
             avgRank = avgRank / tracksToAdd.size();
             savePlaylist(avgRank, durationToSet, playlist);
-            Playlist playlist1 = playlistRepository.findFirstByTitle(playlist.getTitle());
-            save(tracksToAdd, playlist1);
+
         }
     }
-
-
 
     public PlaylistCredentialsList generate(HttpServletRequest req, HttpServletResponse res) throws IOException {
         PlaylistCredentialsList creds = new ObjectMapper()
@@ -273,35 +276,5 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         return tracks;
     }
 
-
-    public void save(List<Track> tracks, Playlist playlist) throws SQLException {
-        Properties dbprops = new Properties();
-        dbprops.put("javax.persistence.jdbc.user", "root");
-        dbprops.put("javax.persistence.jdbc.password", "firstreactiveapp");
-        int playlistId = playlist.getId();
-
-        try (
-
-                Connection connection = DriverManager.getConnection
-                        ("jdbc:mariadb://reactive.ccae2duiwmn3.us-east-2.rds.amazonaws.com/root?" +
-                                "user=root&password=firstreactiveapp");
-                PreparedStatement statement = connection.prepareStatement(
-                        "INSERT into playlists_tracks (playlist_id, track_id) values (?,?)")
-
-        ) {
-            int i = 0;
-
-            for (Track track : tracks) {
-                statement.setObject(1, playlistId);
-                statement.setObject(2, track.getId());
-                statement.addBatch();
-                i++;
-                if (i % 100 == 0 || i == tracks.size()) {
-                    statement.executeBatch(); // Execute every 100 items.
-                }
-
-            }
-        }
-    }
 
 }

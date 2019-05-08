@@ -12,8 +12,8 @@ class AddPlaylist extends React.Component {
     this.state = {
       username: this.props.username,
       title: "",
-      sameartist: true,
-      topranks: true,
+      sameartist: false,
+      topranks: false,
       Dance: 0,
       Rock: 0,
       Pop: 0,
