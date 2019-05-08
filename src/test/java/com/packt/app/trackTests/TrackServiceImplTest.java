@@ -57,42 +57,7 @@ public class TrackServiceImplTest {
 
     }
 
-    @Test
-    public void findAllByDurationBetween_Should_Return_Tracks_When_Match_Exist() {
 
-        TrackRepository trackRepository = Mockito.mock(TrackRepository.class);
-        TrackService trackService = new TrackServiceImpl(trackRepository);
-
-        Album album = new Album();
-        Artist artist = new Artist();
-        Genre genre = new Genre();
-        Track track = new Track("title", "link", 100, 5, "preview_url", genre, album, artist);
-
-        List<Track> list = new ArrayList<>();
-        list.add(track);
-
-        Mockito.when(trackService.findAllByDurationBetween(80, 120))
-                .thenReturn(
-                        list
-                );
-
-        //Act
-        List<Track> result = trackService.findAllByDurationBetween(80, 120);
-
-        //Assert
-        Assert.assertEquals(1, result.size());
-    }
-
-    @Test
-    public void getRandomTrackFromDB_Should_Call_TrackRepository_getRandomTrackFromDB(){
-        TrackRepository trackRepository = Mockito.mock(TrackRepository.class);
-
-        //Act
-        List<Track> result = Arrays.asList(trackRepository.getRandomTrackFromDB());
-
-        //Assert
-        Assert.assertEquals(1, result.size());
-    }
 
     @Test
     public void saveTrack_Should_Call_TrackRepository_Save(){

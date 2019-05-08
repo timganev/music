@@ -25,6 +25,7 @@ import static com.packt.app.constants.Constants.SAVE_TRACK_TO_DB_MESSAGE;
 
 @Service
 public class GenerateDataBaseServiceImpl implements GenerateDataBaseService{
+
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     private TrackService trackService;
@@ -81,8 +82,6 @@ public class GenerateDataBaseServiceImpl implements GenerateDataBaseService{
 
 
     public void saveData(List<Track> tracks, Genre genre) {
-
-       genreService.saveGenres();
 
         for (Track track : tracks) {
             artistService.saveArtist(track.getArtist());

@@ -25,15 +25,7 @@ public class TrackServiceImpl implements TrackService{
         trackRepository.save(track);
     }
 
-    @Override
-    public List<Track> findAllByDurationBetween(Integer min, Integer max) {
-        return trackRepository.findAllByDurationBetween(min,max);
-    }
 
-    @Override
-    public Track getRandomTrackFromDB() {
-        return trackRepository.getRandomTrackFromDB();
-    }
 
 
 }

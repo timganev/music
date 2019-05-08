@@ -3,6 +3,7 @@ package com.packt.app.generatePlaylist;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.packt.app.Application;
+import com.packt.app.artist.Artist;
 import com.packt.app.genre.Genre;
 import com.packt.app.genre.GenreRepository;
 import com.packt.app.playlist.*;
@@ -10,16 +11,22 @@ import com.packt.app.track.Track;
 import com.packt.app.track.TrackRepository;
 import com.packt.app.user.User;
 import com.packt.app.user.UserRepository;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
 
 import static com.packt.app.constants.Constants.*;
 
@@ -43,301 +50,208 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
     }
 
 
+    public void savePlaylist(int avgRank, double durationToSet, Playlist playlist) {
+        playlist.setDuration(durationToSet);
+        playlist.setAvgrank(avgRank);
+        playlistRepository.save(playlist);
+    }
+
     @Override
-    public void generatePlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public void generatePlaylist(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
         PlaylistCredentialsList playlistCredentialsList = generate(req, res);
         String title = playlistCredentialsList.getTitle();
         String userName = playlistCredentialsList.getUsername();
         boolean isSameArtistAllow = playlistCredentialsList.isSameartist();
         boolean isTopRankAllow = playlistCredentialsList.isTopranks();
         List<PlaylistCredentials> playlistCredentials = playlistCredentialsList.getPlaylistCredentials();
+        int playlistCredentialsSize = playlistCredentials.size();
 
-        if (playlistCredentials.size() == 1 && playlistCredentials.get(0).getGenre() == null ) {
-           saveGeneratedPlaylistWithoutGenre(title, userName, playlistCredentials, isSameArtistAllow, isTopRankAllow);
+        if (isSameArtistAllow || isTopRankAllow) {
+            generatePlaylistWithCriteria(title, userName, playlistCredentials, isSameArtistAllow, isTopRankAllow, playlistCredentialsSize);
 
-        } else if (playlistCredentials.size() == 1 && playlistCredentials.get(0).getGenre() != null ) {
-            saveGeneratedPlaylistByOneGenre(title, userName, playlistCredentials, isSameArtistAllow, isTopRankAllow);
-
-        }else if (playlistCredentials.size() >1 ){
-            saveGeneratedPlaylistByMoreGenre(title, userName, playlistCredentials, isSameArtistAllow, isTopRankAllow);
+        } else {
+            generatePlaylistWithoutCriteria(title, userName, playlistCredentials, playlistCredentialsSize);
 
         }
+    }
+
+    public List<Track> getTracksByGenreGroupByTitle(int genreid) {
+        return trackRepository.findAllByGenreGroupByTitle(genreid);
 
     }
 
-
-
-    @Override
-    public void saveGeneratedPlaylistByOneGenre(String title, String userName,
-                                                List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
-                                                boolean isTopRankAllow) {
-        Playlist playlist = generatePlaylistByOneGenre(title, userName, playlistCredentials, isSameArtistAllow1, isTopRankAllow);
-        playlistRepository.save(playlist);
-        String message = String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
-        logger.debug(message);
+    public List<Track> getAllTracksWithoutCiteriaOrderByArtist() {
+        return (List<Track>) trackRepository.findAllGroupByArtist();
     }
 
-    @Override
-    public void saveGeneratedPlaylistByMoreGenre(String title, String userName,
-                                                 List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow1,
-                                                 boolean isTopRankAllow) {
-        Playlist playlist = generatePlaylistByMoreGenres(title, userName,playlistCredentials,isSameArtistAllow1,isTopRankAllow);
-        playlistRepository.save(playlist);
-        String message = String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
-        logger.debug(message);
+    public List<Track> getAllTracksWithCiteriaGroupByTitle() {
+        return (List<Track>) trackRepository.findAllGroupByTitle();
+
     }
 
-    @Override
-    public void saveGeneratedPlaylistWithoutGenre(String title, String userName,
-                                                  List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
-                                                  boolean isTopRankAllow) {
-        Playlist playlist = generatePlaylistWithoutGenre(title, userName,playlistCredentials,isSameArtistAllow,isTopRankAllow);
-        playlistRepository.save(playlist);
-        String message = String.format(CREATE_PLAYLIST_MESSAGE, playlist.getTitle());
-        logger.debug(message);
+    public List<Track> getAllByGenreGroupByArtist(int genreId) {
+        return (List<Track>) trackRepository.findAllByGenreGroupByArtist(genreId);
+    }
+
+    public List<Track> getAllTracksGroupByArtistOrderByRankDesc() {
+        return (List<Track>) trackRepository.findAllTracksGroupByArtistOrderByRankDesc();
+    }
+
+    public List<Track> getAllTracksByGenreGroupByArtistOrderByRankDesc(int genreId) {
+        return (List<Track>) trackRepository.findAllTracksByGenreGroupByArtistOrderByRankDesc(genreId);
+    }
+
+    public List<Track> getAllTracksOrderByRankDesc() {
+        return (List<Track>) trackRepository.findAllTracksOrderByRankDesc();
+    }
+
+    public List<Track> getAllTracksByGenreOrderByRankDesc(int genreId) {
+        return (List<Track>) trackRepository.findAllTracksByGenreOrderByRankDesc(genreId);
     }
 
 
+    public void generatePlaylistWithoutCriteria(String title, String userName, List<PlaylistCredentials> playlistCredentials,
+                                                int playlistCredentialsSize) throws SQLException {
+        int i = 0;
+        double durationToSet = 0;
+        List<Track> allNeededtracks = new ArrayList<>();
+        int avgRank = 0;
+        List<Track> tracksToAdd = new ArrayList<>();
 
-    public Playlist generatePlaylistByOneGenre(String title, String userName,
-                                               List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
-                                               boolean isTopRankAllow) {
 
-        double currentDuration = 0;
         User user = userRepository.findFirstByUsername(userName);
-        Playlist playlist = new Playlist(title, user, 0,0);
+        Playlist playlist = new Playlist(title, user, durationToSet, avgRank);
 
-        int countOfRandomReturns = 0;
-        PlaylistCredentials pl = playlistCredentials.get(0);
-        String genre = pl.getGenre();
+        while (i < playlistCredentialsSize) {
 
-        if (playlistRepository.findFirstByTitle(title) != null) {
-            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
-            logger.error(message);
-            throw new IllegalArgumentException("Playlist with this title already exist");
+            if (playlistCredentials.get(0).getGenre().equals("all")) {
+                allNeededtracks = getAllTracksWithoutCiteriaOrderByArtist();
+            } else {
+                String genre = playlistCredentials.get(i).getGenre();
+                Genre genre1 = genreRepository.findByName(genre);
+                allNeededtracks = getAllByGenreGroupByArtist(genre1.getId());
+            }
 
+            while (playlistCredentials.get(i).getDuration() > durationToSet) {
+                Random rand = new Random();
+                Track randomTrack = allNeededtracks.get(rand.nextInt(allNeededtracks.size()));
+
+               tracksToAdd.add(randomTrack);
+                avgRank += randomTrack.getRank();
+                durationToSet += randomTrack.getDuration();
+                allNeededtracks.remove(randomTrack);
+            }
+            i++;
         }
-        currentDuration = getCurrentDuration(currentDuration, playlist, countOfRandomReturns, pl, genre,isSameArtistAllow,isTopRankAllow);
-
-        if (currentDuration == 0) {
-            String message = String.format("No tracks matched in genre %s with duration", pl.getGenre(), pl.getDuration());
-            logger.debug(message);
-
-        }
-        playlist.setDuration(currentDuration);
-
-
-        playlist.setUsername(userName);
-        playlist.setImage_url("https://vignette.wikia.nocookie.net/uncyclopedia/images/5/56/Music-notes.jpg/revision/latest?cb=20080914120706");
-
-        return playlist;
+         avgRank = avgRank / tracksToAdd.size();
+        savePlaylist(avgRank, durationToSet, playlist);
+        Playlist playlist1 = playlistRepository.findFirstByTitle(playlist.getTitle());
+        save(tracksToAdd, playlist1);
 
     }
 
+    public void generatePlaylistWithCriteria(String title, String userName, List<PlaylistCredentials> playlistCredentials,
+                                             boolean isSameArtistAllow, boolean isTopRankAllow, int playlistCredentialsSize) throws SQLException {
+        int i = 0;
+        double durationToSet = 0;
+        List<Track> allNeededtracks = new ArrayList<>();
+        int avgRank = 0;
+        List<Track> tracksToAdd = new ArrayList<>();
 
-    public Playlist generatePlaylistByMoreGenres(String title, String userName,
-                                                 List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
-                                                 boolean isTopRankAllow){
-
-        double currentDuration = 0;
         User user = userRepository.findFirstByUsername(userName);
+        Playlist playlist = new Playlist(title, user, durationToSet, avgRank);
 
-        Playlist playlist = new Playlist(title, user, 0,0);
+        if (isSameArtistAllow) {
+            while (i < playlistCredentialsSize) {
 
-        int currentCredential = 0;
-        int countOfRandomReturns = 0;
-        int durationToSet = 0;
-
-        if (playlistRepository.findFirstByTitle(title) != null) {
-            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
-            logger.error(message);
-            throw new IllegalArgumentException("Playlist with this title already exist");
-
-        }
-
-        while (currentCredential < playlistCredentials.size()) {
-            PlaylistCredentials pl = playlistCredentials.get(currentCredential);
-            String genre = pl.getGenre();
-
-            currentDuration = getCurrentDuration(currentDuration, playlist,
-                    countOfRandomReturns, pl, genre,isSameArtistAllow,isTopRankAllow);
-
-            if (currentDuration == 0) {
-                String message = String.format(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE, pl.getGenre(), pl.getDuration());
-                logger.error(message);
-                currentCredential++;
-                continue;
-            }
-            durationToSet += currentDuration;
-            currentDuration = 0;
-            playlist.setDuration(durationToSet);
-            currentCredential++;
-        }
-
-        playlist.setUsername(userName);
-        playlist.setImage_url("https://vignette.wikia.nocookie.net/uncyclopedia/images/5/56/Music-notes.jpg/revision/latest?cb=20080914120706");
-        return playlist;
-
-
-    }
-
-
-    public double getCurrentDuration(double currentDuration, Playlist playlist, int countOfRandomReturns,
-                                     PlaylistCredentials pl, String genre,boolean isSameArtistAllow,boolean isTopRankAllow) {
-        Genre genre1 = genreRepository.findByName(genre);
-        List<Track> tracks=new ArrayList<>();
-        int indexToIter=0;
-        int averageRank=0;
-        int currentRank=0;
-        List<String> title=new ArrayList<>();
-        if (isTopRankAllow){
-             tracks=getTracksByGenreOrderedByRankDesc(genre);
-        }
-        while (currentDuration < pl.getDuration() + 80) {
-
-            if (countOfRandomReturns > 10) {
-                break;
-            }
-            Track track;
-
-            if (!isTopRankAllow) {
-                if ("all".equals(genre)) {
-                    track = trackRepository.getRandomTrackFromDB();
+                if (playlistCredentials.get(0).getGenre().equals("all")) {
+                    allNeededtracks = getAllTracksWithCiteriaGroupByTitle();
                 } else {
-                    track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
+                    String genre = playlistCredentials.get(i).getGenre();
+                    Genre genre1 = genreRepository.findByName(genre);
+                    allNeededtracks = getTracksByGenreGroupByTitle(genre1.getId());
                 }
-                if (track.getDuration() > pl.getDuration() + 80) {
-                   break;
+                while (playlistCredentials.get(i).getDuration() > durationToSet) {
+                    Random rand = new Random();
+                    Track randomTrack = allNeededtracks.get(rand.nextInt(allNeededtracks.size()));
+
+                    tracksToAdd.add(randomTrack);
+                    avgRank += randomTrack.getRank();
+                    durationToSet += randomTrack.getDuration();
                 }
-            }else {
-                track=tracks.get(indexToIter);
-                indexToIter++;
+                i++;
             }
-        countOfRandomReturns=0;
+            avgRank = avgRank / tracksToAdd.size();
+            savePlaylist(avgRank, durationToSet, playlist);
+            Playlist playlist1 = playlistRepository.findFirstByTitle(playlist.getTitle());
+            save(tracksToAdd, playlist1);
 
+        } else if (isTopRankAllow) {
+            while (i < playlistCredentialsSize) {
 
+                if (playlistCredentials.get(0).getGenre().equals("all")) {
+                    allNeededtracks = getAllTracksGroupByArtistOrderByRankDesc();
 
-            if (title.contains(track.getTitle())) {
-                while (title.contains(track.getTitle())) {
-                    track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
-                    countOfRandomReturns++;
-                    if (countOfRandomReturns > 5) {
-                        break;
-                    }
+                } else {
+                    String genre = playlistCredentials.get(i).getGenre();
+                    Genre genre1 = genreRepository.findByName(genre);
+                    allNeededtracks = getAllTracksByGenreGroupByArtistOrderByRankDesc(genre1.getId());
+
                 }
-            }else {
-                title.add(track.getTitle());
+
+                while (playlistCredentials.get(i).getDuration() > durationToSet) {
+                    Track randomTrack = allNeededtracks.get(0);
+
+                    tracksToAdd.add(randomTrack);
+                    avgRank += randomTrack.getRank();
+                    durationToSet += randomTrack.getDuration();
+                    allNeededtracks.remove(randomTrack);
+                }
+                i++;
+            }
+            avgRank = avgRank / tracksToAdd.size();
+            savePlaylist(avgRank, durationToSet, playlist);
+            Playlist playlist1 = playlistRepository.findFirstByTitle(playlist.getTitle());
+            save(tracksToAdd, playlist1);
+
+        } else {
+            while (i < playlistCredentialsSize) {
+
+                if (playlistCredentials.get(0).getGenre().equals("all")) {
+                    allNeededtracks = getAllTracksOrderByRankDesc();
+
+
+                } else {
+                    String genre = playlistCredentials.get(i).getGenre();
+                    Genre genre1 = genreRepository.findByName(genre);
+                    allNeededtracks = getAllTracksByGenreOrderByRankDesc(genre1.getId());
+
+                }
+
+                while (playlistCredentials.get(i).getDuration() > durationToSet) {
+                    Random rand = new Random();
+                    Track randomTrack = allNeededtracks.get(rand.nextInt(allNeededtracks.size()));
+
+
+                    tracksToAdd.add(randomTrack);
+                    avgRank += randomTrack.getRank();
+                    durationToSet += randomTrack.getDuration();
+                }
+                i++;
             }
 
-            if (playlist.getPlaylistTracks() != null && playlist.getPlaylistTracks().contains(track)) {
-                while (playlist.getPlaylistTracks().contains(track)) {
-                    track = trackRepository.getRandomTrackFromDbByGenre(genre1.getId());
-                    countOfRandomReturns++;
-                    if (countOfRandomReturns > 5) {
-                        break;
-                    }
-                }
-            }
-
-            if (!isSameArtistAllow) {
-                if (playlist.getPlaylistArtists() != null && playlist.getPlaylistArtists().contains(track.getArtist())) {
-                    continue;
-                }
-            }
-            playlist.getPlaylistTracks().add(track);
-            playlist.getPlaylistArtists().add(track.getArtist());
-            playlist.getPlaylistGenres().add(track.getGenre());
-            currentRank+= track.getRank();
-            currentDuration += track.getDuration();
-
+            avgRank = avgRank / tracksToAdd.size();
+            savePlaylist(avgRank, durationToSet, playlist);
+            Playlist playlist1 = playlistRepository.findFirstByTitle(playlist.getTitle());
+            save(tracksToAdd, playlist1);
         }
-        if (playlist.getPlaylistTracks().isEmpty()) {
-            String message = String.format(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE, pl.getGenre(), pl.getDuration());
-            logger.error(message);
-            throw new NullPointerException(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE);
-        }
-        averageRank=currentRank/playlist.getPlaylistTracks().size();
-        playlist.setAvgrank(averageRank);
-        return currentDuration;
     }
 
-    public Playlist generatePlaylistWithoutGenre(String title, String userName,
-                                                 List<PlaylistCredentials> playlistCredentials, boolean isSameArtistAllow,
-                                                 boolean isTopRankAllow) {
-        PlaylistCredentials pl = playlistCredentials.get(0);
 
-        double currentDuration = 0;
-        int countOfRandomReturns = 0;
-        int durationToSet = 0;
-        int averageRank=0;
-        int currentRank=0;
-
-        User user = userRepository.findFirstByUsername(userName);
-
-        Playlist playlist = new Playlist(title, user, 0,0);
-        Track track = new Track();
-
-        track = trackRepository.getRandomTrackFromDB();
-
-        while (currentDuration < pl.getDuration() + 80) {
-            if (track.getDuration() > pl.getDuration() + 80) {
-                break;
-            }
-
-            if (playlist.getPlaylistTracks() != null && playlist.getPlaylistTracks().contains(track)) {
-                while (playlist.getPlaylistTracks().contains(track)) {
-                    track = trackRepository.getRandomTrackFromDB();
-                    countOfRandomReturns++;
-                    if (countOfRandomReturns > 5) {
-                        break;
-                    }
-                }
-            }
-
-            if (playlist.getPlaylistTracks() != null && playlist.getPlaylistTracks().contains(track)) {
-                countOfRandomReturns++;
-                continue;
-            }
-            if (!isSameArtistAllow) {
-                if (playlist.getPlaylistArtists() != null && playlist.getPlaylistArtists().contains(track.getArtist())) {
-                    continue;
-                }
-            }
-            playlist.getPlaylistTracks().add(track);
-            playlist.getPlaylistArtists().add(track.getArtist());
-            playlist.getPlaylistGenres().add(track.getGenre());
-            currentRank+= track.getRank();
-            currentDuration+=track.getDuration();
-        }
-
-        if (currentDuration == 0) {
-            String message = String.format("No tracks matched in genre %s with duration", pl.getGenre(), pl.getDuration());
-            logger.debug(message);
-            throw new NullPointerException();
-        }
-
-
-        if (playlistRepository.findFirstByTitle(title) != null) {
-            String message = String.format(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE, title);
-            logger.error(message);
-            throw new IllegalArgumentException(THROW_WHEN_PLAYLIST_WITH_TITLE_ALREADY_EXIST_MESSAGE);
-        }
-
-        if (playlist.getPlaylistTracks().isEmpty()) {
-            String message = String.format(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE, pl.getGenre(), pl.getDuration());
-            logger.error(message);
-            throw new NullPointerException(NO_TRACKS_WITH_THIS_DURATION_AND_GENRE);
-        }
-
-        averageRank=currentRank/playlist.getPlaylistTracks().size();
-        playlist.setAvgrank(averageRank);
-        durationToSet += currentDuration;
-        playlist.setDuration(durationToSet);
-        playlist.setUsername(userName);
-        playlist.setImage_url("https://vignette.wikia.nocookie.net/uncyclopedia/images/5/56/Music-notes.jpg/revision/latest?cb=20080914120706");
-        return playlist;
-
-    }
+//    public List<Track> sortList(List<Track> trackList) {
+//        trackList.sort(new ComparatorClass());
+//        return trackList;
+//    }
 
 
     public PlaylistCredentialsList generate(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -354,5 +268,35 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         return tracks;
     }
 
+
+    public void save(List<Track> tracks, Playlist playlist) throws SQLException {
+        Properties dbprops = new Properties();
+        dbprops.put("javax.persistence.jdbc.user", "root");
+        dbprops.put("javax.persistence.jdbc.password", "firstreactiveapp");
+        int playlistId = playlist.getId();
+
+        try (
+
+                Connection connection = DriverManager.getConnection
+                        ("jdbc:mariadb://reactive.ccae2duiwmn3.us-east-2.rds.amazonaws.com/root?" +
+                                "user=root&password=firstreactiveapp");
+                PreparedStatement statement = connection.prepareStatement(
+                        "INSERT into playlists_tracks (playlist_id, track_id) values (?,?)")
+
+        ) {
+            int i = 0;
+
+            for (Track track : tracks) {
+                statement.setObject(1, playlistId);
+                statement.setObject(2, track.getId());
+                statement.addBatch();
+                i++;
+                if (i % 100 == 0 || i == tracks.size()) {
+                    statement.executeBatch(); // Execute every 100 items.
+                }
+
+            }
+        }
+    }
 
 }

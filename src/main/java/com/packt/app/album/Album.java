@@ -61,13 +61,13 @@ public class Album {
         this.title = title;
     }
 
-//    public String getAlbum_track() {
-//        return album_tracks;
-//    }
-//
-//    public void setAlbum_track(String album_track) {
-//        this.album_tracks = album_track;
-//    }
+    public String getAlbum_track() {
+        return album_tracks;
+    }
+
+    public void setAlbum_track(String album_track) {
+        this.album_tracks = album_track;
+    }
 
     public Artist getArtist() {
         return artist;
@@ -83,5 +83,13 @@ public class Album {
 //
 //    public void setAlbumTracks(Set<Track> albumTracks) {
 //        this.albumTracks = albumTracks;
+//    }
+//
+//    public String getAlbum_tracks() {
+//        return album_tracks;
+//    }
+//
+//    public void setAlbum_tracks(String album_tracks) {
+//        this.album_tracks = album_tracks;
 //    }
 }

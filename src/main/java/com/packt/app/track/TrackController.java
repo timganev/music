@@ -29,17 +29,6 @@ public class TrackController {
         return trackService.getTracks();
     }
 
-    //    http://localhost:8080//findbyduration?min=1&max=200
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @RequestMapping(value = "/findbyduration", params = {"min", "max"}, method = GET)
-    @ResponseBody
-    public ResponseEntity<List<Track>> findAllByDurationBetween(Integer min, Integer max) {
-        if (trackService.findAllByDurationBetween( min,max).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Tracks not found");
-        }
-        return new ResponseEntity<>(trackService.findAllByDurationBetween( min,max), HttpStatus.OK);
 
-    }
 
 }

@@ -88,18 +88,18 @@ public class PlaylistServiceImplTest {
 
     }
 
-    @Test(expected = NullPointerException.class)
-    public void getPlaylistsTracks_Throw_When_Have_No_Tracks() {
-
-        PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
-        PlaylistService playlistService=new PlaylistServiceImpl(playlistRepository);
-
-        User user=new User("name","123456","User");
-
-        Set<Track> list = new HashSet<>();
-
-        //Act
-        Set<Track> result = playlistService.getPlaylistTracks("title");
-
-    }
+//    @Test(expected = NullPointerException.class)
+//    public void getPlaylistsTracks_Throw_When_Have_No_Tracks() {
+//
+//        PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
+//        PlaylistService playlistService=new PlaylistServiceImpl(playlistRepository);
+//
+//        User user=new User("name","123456","User");
+//
+//        Set<Track> list = new HashSet<>();
+//
+//        //Act
+//        Set<Track> result = playlistService.getPlaylistTracks("title");
+//
+//    }
 }

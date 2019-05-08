@@ -16,7 +16,7 @@ import java.util.Set;
 public class Artist {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
 
     @JsonProperty("tracklist")
@@ -42,11 +42,11 @@ public class Artist {
 
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -74,13 +74,7 @@ public class Artist {
         this.artistAlbums = artistAlbums;
     }
 
-//
-//    public Set<Track> getArtistTracks() {
-//        return artistTracks;
-//    }
-//
-//    public void setArtistTracks(Set<Track> artistTracks) {
-//        this.artistTracks = artistTracks;
-//    }
+
+
 
 }

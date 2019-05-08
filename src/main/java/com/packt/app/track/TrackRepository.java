@@ -15,20 +15,32 @@ import static com.packt.app.constants.Constants.*;
 public interface TrackRepository extends CrudRepository<Track, Long> {
 
 
-List<Track> findAllByGenreAndDurationBetween(Integer genre, Integer min, Integer max);
-List<Track> findAllByGenre_Id(Integer genre);
-List<Track> findAllByDurationBetween(Integer min, Integer max);
-
-    @Query(value = QUEERY_RANDOM_TRACK,
-            nativeQuery = true)
-    Track getRandomTrackFromDB();
-
-      @Query(value = QUERRY_RANDOM_TRACK_BY_GENRE,
-            nativeQuery = true)
-    Track getRandomTrackFromDbByGenre(@Param("id") int id);
 
       List<Track> getAllByGenreOrderByRankDesc(Genre genre);
 
+        @Query(value = "select * from track group by artist",nativeQuery = true)
+        List<Track> findAllGroupByArtist();
+
+    @Query(value = "select * from track group by title",nativeQuery = true)
+        List<Track> findAllGroupByTitle();
+
+    @Query(value = "select * from track where genre=:genreId group by title",nativeQuery = true)
+    List<Track> findAllByGenreGroupByTitle( @Param("genreId") int genreId);
+
+    @Query(value = "select * from track where genre=:genreId group by artist",nativeQuery = true)
+    List<Track> findAllByGenreGroupByArtist(@Param("genreId") int genreId);
+
+    @Query(value = "select * from track group by artist order by rank desc",nativeQuery = true)
+    List<Track> findAllTracksGroupByArtistOrderByRankDesc();
+
+    @Query(value = "select * from track where genre=:genreId group by artist order by rank desc",nativeQuery = true)
+    List<Track> findAllTracksByGenreGroupByArtistOrderByRankDesc(@Param("genreId") int genreId);
+
+   @Query(value = "select * from track where genre=:genreId order by rank desc",nativeQuery = true)
+    List<Track> findAllTracksByGenreOrderByRankDesc(@Param("genreId") int genreId);
+
+   @Query(value = "select * from track order by rank desc",nativeQuery = true)
+    List<Track> findAllTracksOrderByRankDesc();
 
 
 

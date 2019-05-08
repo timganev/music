@@ -71,20 +71,4 @@ public class TrackRepositoryTest {
         Assert.assertEquals(emptyList, trackRepository.findAll());
     }
 
-    @Test
-    public void getRandomTrackFromDB_Should_Return_RandomTrack(){
-        TrackRepository trackRepository = Mockito.mock(TrackRepository.class);
-        TrackService trackService = new TrackServiceImpl(trackRepository);
-
-        Album album = new Album();
-        Artist artist = new Artist();
-        Genre genre = new Genre();
-        Track track = new Track("title", "link", 100, 5, "preview_url", genre, album, artist);
-
-
-        trackService.getRandomTrackFromDB();
-
-        //Assert
-        Mockito.verify(trackRepository, Mockito.times(1)).getRandomTrackFromDB();
-    }
 }
