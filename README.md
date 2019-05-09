@@ -44,11 +44,16 @@ can edit user role, delete users and playlists
 
 **Used resources:**
 
-* Spring Boot,JWT Security
+* Spring Boot
+* JWT Security
 * REACT
+* REACT TABLE
 * Mockito
-* Datatables
+* Datatables MySQL
 * Bootstrap 4
 * Animate CSS
 
+
+![GitHub Logo](C:\Users\Admin\Desktop\HomePage2)
+Format: ![Alt Text](url)
 
