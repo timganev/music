@@ -54,6 +54,6 @@ can edit user role, delete users and playlists
 * Animate CSS
 
 
-![GitHub Logo](C:\Users\Admin\Desktop\HomePage2)
+![](images/HomePage2.png)
 Format: ![Alt Text](url)
 
