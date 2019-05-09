@@ -45,7 +45,7 @@ public class PlaylistControllerTest {
 
         PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
 
-        Playlist playlist = new Playlist("title", new User(), 152,0);
+        Playlist playlist = new Playlist("title", new User(), 152,0,"username","genres");
         List<Playlist> allPlaylists = Arrays.asList(playlist);
 
         given(service.getPlaylists()).willReturn(allPlaylists);
@@ -56,45 +56,5 @@ public class PlaylistControllerTest {
                 .andExpect(jsonPath("$[0].title").value("title"));
     }
 
-//    @Test
-//    public void givenPlaylist_whenGetPlaylisetByTitle_thenReturnJsonArray()
-//            throws Exception {
-//
-//
-//        PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
-//        PlaylistService playlistService = new PlaylistServiceImpl(playlistRepository);
-//
-//        Playlist playlist = new Playlist("title", new User(), 152);
-//
-//
-//        given(service.getPlaylistByTitle("title")).willReturn(playlist);
-//
-//        mvc.perform(get("/allpalylists")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(new ObjectMapper().writeValueAsString(playlist)))
-//                .andExpect(jsonPath("$[0].title").value("title"));
-//
-//    }
-//
 
-
-//    @Test
-//    public void givenPlaylistTracks_whenGetPlaylistTracks_thenReturnJsonArray()
-//            throws Exception {
-//
-//
-//        PlaylistRepository playlistRepository = Mockito.mock(PlaylistRepository.class);
-//        PlaylistService playlistService = new PlaylistServiceImpl(playlistRepository);
-//
-//        Playlist playlist = new Playlist("title", new User(), 152);
-//        Set<Track> allPlaylistsTracks =playlist.getPlaylistTracks();
-//
-//        given(service.getPlaylistTracks("title")).willReturn(allPlaylistsTracks);
-//
-//        mvc.perform(get("/playlisttracks")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(new ObjectMapper().writeValueAsString(playlist)))
-//                .andExpect(jsonPath("$").value(allPlaylistsTracks));
-//
-//    }
 }

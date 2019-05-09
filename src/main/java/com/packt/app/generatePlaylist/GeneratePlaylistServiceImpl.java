@@ -110,7 +110,8 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
         double currentDuration = 0;
         Set<Track> tracksToAdd = new HashSet<>();
         User user = userRepository.findFirstByUsername(userName);
-        Playlist playlist = new Playlist(title, user, durationToSet, avgRank);
+        Playlist playlist = new Playlist(title, user, durationToSet, avgRank,"","");
+        String playlistGenres="";
 
         if (isSameArtistAllow && !isTopRankAllow) {
             while (i < playlistCredentialsSize) {
@@ -129,6 +130,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 i++;
                 durationToSet += currentDuration;
                 currentDuration = 0;
+                playlistGenres+=genre1.getName()+" ";
             }
         } else if (isTopRankAllow && !isSameArtistAllow) {
             while (i < playlistCredentialsSize) {
@@ -146,6 +148,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 i++;
                 durationToSet += currentDuration;
                 currentDuration = 0;
+                playlistGenres+=genre1.getName()+" ";
             }
 
         } else if (isSameArtistAllow && isTopRankAllow) {
@@ -165,6 +168,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 i++;
                 durationToSet += currentDuration;
                 currentDuration = 0;
+                playlistGenres+=genre1.getName()+" ";
             }
         } else {
             while (i < playlistCredentialsSize) {
@@ -185,6 +189,7 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
                 i++;
                 durationToSet += currentDuration;
                 currentDuration = 0;
+                playlistGenres+=genre1.getName()+" ";
             }
         }
 
@@ -193,6 +198,8 @@ public class GeneratePlaylistServiceImpl implements GeneratePlaylistService {
             logger.info(message);
             throw new IllegalArgumentException(message);
         }
+        playlist.setUsername(userName);
+        playlist.setGenres(playlistGenres);
         playlist.setImage_url(playlistImage.getImageUrl());
         playlist.setPlaylistTracks(tracksToAdd);
         avgRank = avgRank / tracksToAdd.size();
