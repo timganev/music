@@ -54,6 +54,14 @@ can edit user role, delete users and playlists
 * Animate CSS
 
 
+
+
 ![](images/HomePage2.png)
-Format: ![Alt Text](url)
+![](images/Register.png)
+![](images/Login.png)
+![](images/LoginMoni.png)
+![](images/Tracks.png)
+![](images/NewPlaylistCopy.png)
+![](images/AdminPanel.png)
+
 
