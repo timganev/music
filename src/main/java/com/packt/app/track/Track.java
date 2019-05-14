@@ -13,7 +13,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Track {
+public class
+Track {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
